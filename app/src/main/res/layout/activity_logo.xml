@@ -1,0 +1,82 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/logo"
+    tools:context=".Logo">
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="180dp"
+        android:id="@+id/v1"
+        />
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:background="@drawable/edittext_style"
+
+        android:drawableLeft="@drawable/work1"
+        android:id="@+id/wordk1"
+        android:textSize="24dp"
+        android:layout_centerHorizontal="true"
+
+        android:singleLine="true"
+        android:layout_above="@+id/wordk2"
+        android:layout_marginBottom="5dp"
+
+        />
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:background="@drawable/edittext_style"
+
+        android:layout_centerHorizontal="true"
+        android:drawableLeft="@drawable/work2"
+        android:id="@+id/wordk2"
+
+        android:layout_marginTop="5dp"
+        android:textSize="24dp"
+        android:singleLine="true"
+        android:layout_above="@+id/buttonlogin"
+        android:layout_marginBottom="10dp"
+
+
+        />
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:background="@drawable/buttonclickstyle"
+
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:text="登录"
+        android:textSize="30dp"
+        android:id="@+id/buttonlogin"
+        android:layout_above="@+id/txtver"
+        android:layout_marginBottom="20dp"
+        />
+
+    <ImageView
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:background="@drawable/infoclickstyle"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:id="@+id/setting"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ver 1.0"
+        android:id="@+id/txtver"
+        android:layout_centerHorizontal="true"
+       android:layout_alignParentBottom="true"
+        android:textColor="@color/blackTransparent9"
+        android:layout_marginBottom="10dp"
+        />
+
+
+</RelativeLayout>

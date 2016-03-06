@@ -1,0 +1,83 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="200dp"
+    android:background="@drawable/background"
+    >
+
+
+
+    <EditText
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:hint="扫描/输入雇主编号"
+        android:id="@+id/customercode"
+        android:background="@drawable/edittext_style"
+        android:singleLine="true"
+        android:textColor="@color/black"
+        android:paddingLeft="5dp"
+        />
+
+    <Button
+        android:layout_width="70dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/t1"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:text="扫描"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/buttonclickstyle"
+        android:id="@+id/scan1"
+        android:textColor="@color/black"
+        />
+
+    <RadioGroup
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:layout_below="@+id/customercode"
+        android:orientation="horizontal"
+        android:background="@color/transparent"
+        >
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="满意"
+            android:id="@+id/r_ok"
+            android:textColor="@color/black"
+            android:background="@color/transparent"
+            android:checked="true"
+            android:paddingLeft="35dp"
+            />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="不满意"
+            android:id="@+id/r_no"
+            android:paddingLeft="35dp"
+            android:layout_marginLeft="50dp"
+            android:textColor="@color/black"
+            android:background="@color/transparent"
+            />
+
+        </RadioGroup>
+
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:text="确认"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/buttonclickstyle"
+        android:id="@+id/buttonok"
+        android:textColor="@color/black"
+        />
+
+
+</RelativeLayout>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.apollo.elevator_check" >
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/appico"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.apollo.elevator_check.Logo"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.apollo.elevator_check.setting"
+            android:label="@string/title_activity_setting" >
+        </activity>
+        <activity
+            android:name="com.apollo.elevator_check.main"
+            android:label="@string/title_activity_main" >
+        </activity>
+        <activity
+            android:name="com.apollo.elevator_check.createtask"
+            android:label="@string/title_activity_createtask"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
+           >
+        </activity>
+        <activity
+            android:name="com.apollo.elevator_check.ScanTask"
+            android:label="@string/title_activity_scan_task" >
+        </activity>
+        <activity
+            android:name="com.apollo.elevator_check.taskfinish"
+            android:label="@string/title_activity_taskfinish"
+            android:theme="@style/Translucent" >
+        </activity>
+        <activity
+            android:name="com.apollo.elevator_check.yingji"
+            android:label="@string/title_activity_yingji" >
+        </activity>
+        <activity
+            android:name="com.apollo.elevator_check.uploaddata"
+            android:label="@string/title_activity_uploaddata" >
+        </activity>
+        <activity
+            android:name="com.apollo.elevator_check.CaptureActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
+
+    </application>
+
+</manifest>

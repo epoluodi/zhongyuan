@@ -1,0 +1,42 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:background="@drawable/background"
+    android:orientation="vertical"
+    tools:context="com.apollo.elevator_check.uploaddata">
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:text="数据上传"
+        android:textColor="@color/black"
+        android:textSize="22dp"
+        android:gravity="center"
+        android:background="@color/steelblue"
+        android:id="@+id/title"
+
+        />
+    <ListView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/list1"
+        style="@style/List"
+        android:layout_weight="1"
+
+        android:layout_marginBottom="5dp"
+        />
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="数据上传"
+        android:textSize="22dp"
+        android:id="@+id/upload"
+        />
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="图片上传"
+        android:textSize="22dp"
+        android:id="@+id/uploadphoto"
+        />
+</LinearLayout>

@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.apollo.elevator_check.createtask" >
+    <item android:id="@+id/dotask"
+        android:title="执行任务"
+        android:orderInCategory="100"
+         />
+    <item android:id="@+id/cleardata"
+        android:title="清除数据"
+        android:orderInCategory="100"
+
+        />
+    <item android:id="@+id/confimtask"
+        android:title="任务确认"
+        android:orderInCategory="100"
+       />
+</menu>

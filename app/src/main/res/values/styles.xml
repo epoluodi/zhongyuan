@@ -1,0 +1,34 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="android:Theme.NoTitleBar">
+        <!-- Customize your theme here. -->
+    </style>
+
+
+
+    <style name="List" parent="android:Widget.ListView">
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:fadeScrollbars">true</item>
+        <item name="android:cacheColorHint">@color/transparent</item>
+        <item name="android:divider">@color/dodgerblue</item>
+        <item name="android:dividerHeight">1px</item>
+
+    </style>
+
+    <style name="Translucent" parent="android:style/Theme.Dialog">
+
+        <item name="android:background">@color/blackTransparent3</item>
+        <item name="android:windowBackground">@color/blackTransparent4</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:focusable">false</item>
+        <item name="android:windowCloseOnTouchOutside">false</item>
+
+    </style>
+    <style name="Animationpopwindows">
+        <item name="android:windowEnterAnimation">@anim/alpha</item>
+        <item name="android:windowExitAnimation">@anim/alpha_exit</item>
+    </style>
+
+</resources>

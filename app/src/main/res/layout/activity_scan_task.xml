@@ -1,0 +1,130 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context="com.apollo.elevator_check.ScanTask">
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:text="扫描操作"
+        android:textColor="@color/black"
+        android:textSize="22dp"
+        android:gravity="center"
+        android:background="@color/steelblue"
+        android:id="@+id/title"
+
+        />
+
+
+
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/title"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:hint="扫描/输入项目编号"
+        android:id="@+id/scancode"
+        android:background="@drawable/edittext_style"
+        android:singleLine="true"
+        android:layout_marginTop="5dp"
+        android:paddingLeft="5dp"
+
+        />
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:text="扫描"
+        android:background="@drawable/buttonclickstyle"
+       android:layout_marginBottom="20dp"
+        android:id="@+id/scan1"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="24dp"
+        />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:text="拍照"
+        android:background="@drawable/buttonclickstyle"
+
+        android:id="@+id/photo"
+        android:layout_marginBottom="10dp"
+        android:layout_above="@+id/scan1"
+        android:layout_centerHorizontal="true"
+        android:textSize="24dp"
+        />
+
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="扫描时间："
+        android:id="@+id/scantime"
+        android:layout_below="@+id/scancode"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+
+
+
+        />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:text="内容："
+        android:id="@+id/scaninfo"
+        android:layout_below="@+id/scantime"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="180dp"
+
+
+        />
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/photo"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal">
+
+        <RadioGroup
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            >
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:layout_marginRight="10dp"
+                android:checked="true"
+                android:id="@+id/checkOK"
+                android:text="合格"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:id="@+id/checkNO"
+                android:layout_marginLeft="10dp"
+                android:text="不合格"
+                />
+        </RadioGroup>
+
+    </LinearLayout>
+
+</RelativeLayout>

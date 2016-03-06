@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    >
+
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+
+        android:text="项目名称"
+        android:textSize="22dp"
+        android:singleLine="true"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/blue"
+        android:id="@+id/projectname"
+
+        />
+
+    <TextView
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+
+        android:text="合同号：123456"
+        android:textSize="16dp"
+        android:singleLine="true"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/mediumslateblue"
+        android:layout_below="@+id/projectname"
+        android:id="@+id/projectno"
+
+
+        />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="电梯编号：123456"
+        android:textSize="16dp"
+        android:singleLine="true"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/mediumslateblue"
+        android:layout_below="@+id/projectname"
+        android:layout_toRightOf="@+id/projectno"
+        android:id="@+id/LiftNO"
+
+
+        />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="状态：123456"
+        android:textSize="16dp"
+        android:singleLine="true"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/mediumslateblue"
+        android:layout_below="@+id/projectno"
+
+        android:id="@+id/state"
+
+
+        />
+</RelativeLayout>
