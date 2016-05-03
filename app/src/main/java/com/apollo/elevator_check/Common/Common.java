@@ -76,7 +76,7 @@ public class Common {
         popview = inflater.inflate(R.layout.popwindows, null);
 
         ((TextView) popview.findViewById(R.id.poptext)).setText(text);
-        popupWindow = new PopupWindow(popview, 330, 120);
+        popupWindow = new PopupWindow(popview, 360, 160);
         popupWindow.setOutsideTouchable(false);
         popupWindow.setFocusable(true);
         popupWindow.setAnimationStyle(R.style.Animationpopwindows);

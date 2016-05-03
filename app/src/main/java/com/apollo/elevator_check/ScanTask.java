@@ -69,6 +69,7 @@ public class ScanTask extends Activity {
         public void onReceive(Context context, Intent intent) {
             // TODO Auto-generated method stub
             isScaning = false;
+
 //            soundpool.play(soundid, 1, 1, 0, 0, 1);
 
 
@@ -79,6 +80,37 @@ public class ScanTask extends Activity {
 //            android.util.Log.i("debug", "----codetype--" + temp);
 //            barcodeStr = intent.getExtras().getString ("data");
             barcodeStr = intent.getExtras().getString ("data");
+
+            switch ((int)(Integer.valueOf( scandata.TableType)))
+            {
+                case 1:
+                    if (!barcodeStr.contains("G-A")) {
+                        Toast.makeText(ScanTask.this,"条码不属于概项目",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    break;
+                case 2:
+                    if (!barcodeStr.contains("G-D")) {
+                        Toast.makeText(ScanTask.this,"条码不属于概项目",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    break;
+                case 3:
+                    if (!barcodeStr.contains("G-B")) {
+                        Toast.makeText(ScanTask.this,"条码不属于概项目",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    break;
+                case 4:
+                    if (!barcodeStr.contains("G-C")) {
+                        Toast.makeText(ScanTask.this,"条码不属于概项目",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    break;
+
+            }
+
+
             scancode.setText(barcodeStr);
             onKeyListenerliftno.onKey(scancode,0,new KeyEvent(KeyEvent.ACTION_UP,66));
             scancode.requestFocus();
@@ -133,7 +165,7 @@ public class ScanTask extends Activity {
         scandata.TableType = bundle.getString("TableType");
         scandata.ProjectCode = bundle.getString("ProjectCode");
         scandata.LiftCode = bundle.getString("LiftCode");
-
+        scandata.pxid = bundle.getString("pxid");
 
 
         photo = (Button)findViewById(R.id.photo);

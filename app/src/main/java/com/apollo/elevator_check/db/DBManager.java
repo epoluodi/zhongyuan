@@ -301,6 +301,17 @@ public class DBManager {
         return;
     }
 
+    public void DelTaskinfo2(String ContractNO,String LiftNO)
+    {
+
+        try {
+
+            db.delete("task","ContractNO = ? and LiftNO = ? ",new String[]{ContractNO,LiftNO} );
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return;
+    }
     public String Gettaskstate(String ContractNO,String LiftNO)
     {
         String result="0";
@@ -493,12 +504,12 @@ public class DBManager {
     }
 
 
-    public String Getowername(String owercode)
+    public String Getowername(String owercode,String pxid)
     {
         String result="";
         try {
-            Cursor cursor = db.rawQuery("select name from Owner_TABLE where Number= ? ",
-                    new String[]{owercode});
+            Cursor cursor = db.rawQuery("select name from Owner_TABLE where Number= ? and pxid = ? ",
+                    new String[]{owercode,pxid});
 
             if (cursor.moveToNext()) {
                 result = cursor.getString(0);

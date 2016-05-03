@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -49,6 +51,7 @@ public class Logo extends Activity {
         public void onReceive(Context context, Intent intent) {
             // TODO Auto-generated method stub
             isScaning = false;
+
 //            soundpool.play(soundid, 1, 1, 0, 0, 1);
 
 
@@ -67,12 +70,14 @@ public class Logo extends Activity {
             {
                 editText1.setText(barcodeStr);
                 editText2.requestFocus();
+
                 return;
             }
            if (editText2.isFocused())
            {
                editText2.setText(barcodeStr);
                onClickListenerlogin.onClick(loginbutton);
+
                return;
            }
         }
@@ -98,6 +103,7 @@ public class Logo extends Activity {
         imageViewsetting =(ImageView)findViewById(R.id.setting);
         imageViewsetting.setOnClickListener(onClickListenersetting);
         editText1 =(EditText) findViewById(R.id.wordk1);
+
         editText1.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {

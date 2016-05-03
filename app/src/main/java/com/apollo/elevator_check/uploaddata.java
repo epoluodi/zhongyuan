@@ -3,6 +3,7 @@ package com.apollo.elevator_check;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Base64;
@@ -13,6 +14,7 @@ import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.apollo.elevator_check.Common.Common;
+import com.apollo.elevator_check.WebService.WebThreadDo;
 import com.apollo.elevator_check.WebService.Webservice;
 
 import org.json.JSONException;
@@ -21,7 +23,9 @@ import org.ksoap2.serialization.PropertyInfo;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
@@ -62,6 +66,9 @@ public class uploaddata extends Activity {
             super.handleMessage(msg);
             switch (msg.what)
             {
+                case 3:
+                    Toast.makeText(uploaddata.this, msg.obj.toString(), Toast.LENGTH_SHORT).show();
+                    break;
                 case 0:
                 Toast.makeText(uploaddata.this, "上传失败", Toast.LENGTH_SHORT).show();
                 Common.CLosePopwindow();
@@ -75,6 +82,21 @@ public class uploaddata extends Activity {
                             new int[]{R.id.projectname, R.id.projectno, R.id.LiftNO, R.id.counts});
                     listView1.setAdapter(simpleAdapter);
                     mapList.clear();
+                    File file = new File(Environment.getExternalStorageDirectory(),"zhongyuan");
+                    File[] files= file.listFiles(new FileFilter() {
+                        @Override
+                        public boolean accept(File file) {
+                            if (file.getName().contains("png"))
+                                return true;
+                            return false;
+                        }
+                    });
+
+                    for (File file1 :files)
+                    {
+                        file1.delete();
+                    }
+
                     break;
 
             }
@@ -112,6 +134,9 @@ public class uploaddata extends Activity {
                         String LiftNO;
                         PropertyInfo[] propertyInfos;
                         PropertyInfo propertyInfo;
+                        String signfile="",pxid="";
+                        String pname="";
+
                         for (int i = 0; i < mapList.size(); i++) {
                             map = mapList.get(i);
                             ContractNO = map.get("ContractNO").replace("合同编号:", "");
@@ -122,10 +147,11 @@ public class uploaddata extends Activity {
                             for (int ii = 0; ii < mapList1.size(); ii++) {
                                 map2 = mapList1.get(ii);
 
-                                propertyInfos = new PropertyInfo[22];
+                                propertyInfos = new PropertyInfo[23];
                                 propertyInfo = new PropertyInfo();
                                 propertyInfo.setName("ProjectName");
                                 propertyInfo.setValue(map2.get("ProjectName"));
+                                pname=map2.get("ProjectName");
                                 propertyInfos[0] = propertyInfo;
                                 propertyInfo = new PropertyInfo();
                                 propertyInfo.setName("ContractNO");
@@ -182,6 +208,7 @@ public class uploaddata extends Activity {
                                 propertyInfo = new PropertyInfo();
                                 propertyInfo.setName("OwnerName");
                                 propertyInfo.setValue(map2.get("OwnerName"));
+                                signfile=map2.get("OwnerName");
                                 propertyInfos[14] = propertyInfo;
                                 propertyInfo = new PropertyInfo();
                                 propertyInfo.setName("OwnerConfirmStatus");
@@ -210,14 +237,15 @@ public class uploaddata extends Activity {
                                 propertyInfo = new PropertyInfo();
                                 propertyInfo.setName("pxid");
                                 propertyInfo.setValue(map2.get("pxid"));
-                                propertyInfos[22] = propertyInfo;
+                                pxid=map2.get("pxid");
+                                propertyInfos[21] = propertyInfo;
                                 propertyInfo = new PropertyInfo();
                                 propertyInfo.setName("state");
                                 propertyInfo.setValue(map2.get("state"));
-                                propertyInfos[23] = propertyInfo;
+                                propertyInfos[22] = propertyInfo;
 
                                 Webservice webservice = new Webservice(Common.ServerWCF,10000);
-                                String r = webservice.PDA_GetInterFaceForStringNew(propertyInfos,"PDA_submit2");
+                                String r = webservice.PDA_GetInterFaceForStringNew(propertyInfos,"PDA_submit3");
                                 if (r.equals("0") || r.equals("-1")) {
                                     handler.sendEmptyMessage(0);
                                     return;
@@ -229,8 +257,39 @@ public class uploaddata extends Activity {
 
 
                             }
+
+                            if (signfile.contains("sign_"))
+                            {
+                                String base64img = "";
+                                base64img  = imgToBase64(Environment.getExternalStorageDirectory().getAbsolutePath()
+                                        + File.separator + "zhongyuan/"+signfile.replace("sign_","")+".png");
+                                propertyInfos = new PropertyInfo[2];
+                                propertyInfo = new PropertyInfo();
+                                propertyInfo.setName("pxid");
+                                propertyInfo.setValue(pxid);
+                                propertyInfos[0] = propertyInfo;
+                                propertyInfo = new PropertyInfo();
+                                propertyInfo.setName("imgbase64");
+                                propertyInfo.setValue(base64img);
+                                propertyInfos[1] = propertyInfo;
+
+                                Webservice webservice = new Webservice(Common.ServerWCF,10000);
+                                String r = webservice.PDA_GetInterFaceForStringNew(propertyInfos,"A_PDA_submitphotoForsign");
+                                if (r.equals("-1"))
+                                {
+                                    handler.sendEmptyMessage(0);
+                                    return;
+                                }
+                            }
                             Common.mainDB.DelTaskinfo(ContractNO,LiftNO);
+
+                            Message message=handler.obtainMessage();
+                            message.what=3;
+                            message.obj=String.format("(%1$s)%2$s 成功上传，服务已经接收到!!",pxid,pname);
+                            handler.sendMessage(message);
                         }
+
+
                         handler.sendEmptyMessage(1);
                     }
                 }).start();

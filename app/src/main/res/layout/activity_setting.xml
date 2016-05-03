@@ -65,4 +65,15 @@
         android:id="@+id/btnupdateapp"
         android:layout_marginBottom="10dp"
         />
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/buttonclickstyle"
+        android:text="数据初始化"
+        android:textSize="24dp"
+        android:layout_above="@+id/btnupdateapp"
+        android:id="@+id/btndbrestore"
+        android:layout_marginBottom="10dp"
+        />
 </RelativeLayout>

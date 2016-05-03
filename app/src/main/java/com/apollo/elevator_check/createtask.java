@@ -338,11 +338,66 @@ public class createtask extends Activity {
             if (spinner.getSelectedItemPosition() ==spinner.getCount()-1)
                 tableindex = "5";
 
+
+
+
             if (selectmap.get("state").equals("1")) {
                 String tableindex2 = Common.mainDB.Gettabletype(
                         selectmap.get("ContractNO"),selectmap.get("LiftNO"));
                 if (tableindex2.equals(""))
                     tableindex2=tableindex;
+                else
+                {
+                    if (tableindex.equals("5") && !tableindex2.equals("5")) {
+//                        AlertDialog.Builder builder=new AlertDialog.Builder(createtask.this);
+//                        builder.setTitle("重要提示").setMessage("切换到应急保养后，将清除原来数据");
+//                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//
+//                                Common.mainDB.DelTaskinfo(selectmap.get("ContractNO"),selectmap.get("LiftNO"));
+//                                mapList = Common.BaseDB.Getprojectinfo(projectcode);
+//                                MyAdapter myAdapter1 = (MyAdapter)listView.getAdapter();
+//                                myAdapter1.notifyDataSetChanged();
+//
+//                                Common.mainDB.AddTask(selectmap.get("ContractNO"),selectmap.get("LiftNO"));
+//                                Intent intent =new Intent(createtask.this,yingji.class);
+//                                Bundle bundle=new Bundle();
+//                                bundle.putString("TableType","5" );
+//                                intent.putExtras(bundle);
+//                                startActivityForResult(intent,1);
+//                                overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
+//
+//                            }
+//                        });
+//                        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+//                                spinner.setSelection(0);
+//
+//                            }
+//                        });
+//                        AlertDialog alertDialog=builder.create();
+//                        alertDialog.show();
+
+
+                        Common.mainDB.DelTaskinfo2(selectmap.get("ContractNO"), selectmap.get("LiftNO"));
+                        mapList = Common.BaseDB.Getprojectinfo(projectcode);
+                        MyAdapter myAdapter1 = (MyAdapter) listView.getAdapter();
+                        myAdapter1.notifyDataSetChanged();
+
+                        Common.mainDB.AddTask(selectmap.get("ContractNO"), selectmap.get("LiftNO"));
+                        intent = new Intent(createtask.this, yingji.class);
+                        bundle = new Bundle();
+                        bundle.putString("TableType", "5");
+                        intent.putExtras(bundle);
+                        startActivityForResult(intent, 1);
+                        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                        return;
+                    }
+
+                }
                 bundle.putString("TableType",tableindex2 );
                 if (tableindex2.equals("5") )
                     intent =new Intent(createtask.this,yingji.class);
@@ -431,7 +486,9 @@ public class createtask extends Activity {
             bundle =new Bundle();
 
             bundle.putString("ContractNO",selectmap.get("ContractNO"));
-//                bundle.putString("LiftNO",selectmap.get("LiftNO") );
+            bundle.putString("pxid",selectmap.get("pxid"));
+            bundle.putString("LiftNO",selectmap.get("LiftNO"));
+            bundle.putString("khmc",selectmap.get("ProjectName"));
 //                bundle.putString("TableType",Common.mainDB.Gettabletype(
 //                selectmap.get("ContractNO"),selectmap.get("LiftNO")));
             String ContractNO = selectmap.get("ContractNO").replace("合同编号:", "");
@@ -445,12 +502,12 @@ public class createtask extends Activity {
                 return;
             }
 
-            if (!CheckWork(mapList1.get(0).get("ProjectType"),
-                    mapList1.get(0).get("TableType"),mapList1.size()))
-            {
-                Toast.makeText(createtask.this,"没有完成所有保养内容，不能完成任务",Toast.LENGTH_SHORT).show();
-                return;
-            }
+//            if (!CheckWork(mapList1.get(0).get("ProjectType"),
+//                    mapList1.get(0).get("TableType"),mapList1.size()))
+//            {
+//                Toast.makeText(createtask.this,"没有完成所有保养内容，不能完成任务",Toast.LENGTH_SHORT).show();
+//                return;
+//            }
 
             intent.putExtras(bundle);
             startActivityForResult(intent,1);
@@ -995,9 +1052,9 @@ public class createtask extends Activity {
             if (mapList.get(i).get("state").equals("0"))
                 state.setText("任务状态：未检查");
             if (mapList.get(i).get("state").equals("1"))
-                state.setText("任务状态：执行中");
+                state.setText("任务状态：未确认");
             if (mapList.get(i).get("state").equals("3"))
-                state.setText("任务状态：未提交");
+                state.setText("任务状态：未发送");
 
             if (!liftNo.equals("") && liftNo.equals(mapList.get(i).get("LiftCode")))
             {
