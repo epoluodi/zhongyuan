@@ -502,12 +502,12 @@ public class createtask extends Activity {
                 return;
             }
 
-//            if (!CheckWork(mapList1.get(0).get("ProjectType"),
-//                    mapList1.get(0).get("TableType"),mapList1.size()))
-//            {
-//                Toast.makeText(createtask.this,"没有完成所有保养内容，不能完成任务",Toast.LENGTH_SHORT).show();
-//                return;
-//            }
+            if (!CheckWork(mapList1.get(0).get("ProjectType"),
+                    mapList1.get(0).get("TableType"),mapList1.size()))
+            {
+                Toast.makeText(createtask.this,"没有完成所有保养内容，不能完成任务",Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             intent.putExtras(bundle);
             startActivityForResult(intent,1);
@@ -775,12 +775,12 @@ public class createtask extends Activity {
         }
     };
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.createtask, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+////        getMenuInflater().inflate(R.menu.createtask, menu);
+//        return false;
+//    }
 
 
 
@@ -848,159 +848,159 @@ public class createtask extends Activity {
 
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        Intent intent;
-        Bundle bundle;
-        switch (id)
-        {
-            case R.id.dotask:
-
-                if (selectmap ==null)
-                {
-                    Toast.makeText(createtask.this,
-                            "请选择一个项目",Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-
-                if (selectmap.get("state").equals("3"))
-                {
-                    Toast.makeText(createtask.this,
-                            "该项目已经完成，不能再次执行",Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-
-
-
-                intent =new Intent(createtask.this,ScanTask.class);
-                bundle =new Bundle();
-                bundle.putString("ProjectName",selectmap.get("ProjectName"));
-                bundle.putString("ContractNO",selectmap.get("ContractNO"));
-                bundle.putString("ProjectType",ProjectType );
-                bundle.putString("LiftType",selectmap.get("LiftType") );
-                bundle.putString("CheckDate",Common.GetSysTimeshort());
-                bundle.putString("EffectiveDate",selectmap.get("EffectiveDate") );
-                bundle.putString("ContractEffectiveDate",selectmap.get("ContractEffectiveDate") );
-                bundle.putString("ReachTime",Common.GetSysOnlyTime() );
-                bundle.putString("CheckPerson",Common.work1name + "," + Common.work2name );
-                bundle.putString("LiftNO",selectmap.get("LiftNO") );
-                bundle.putString("LiftNOTime",Common.GetSysOnlyTime() );
-                bundle.putString("FactoryNo",selectmap.get("FactoryNo") );
-                bundle.putString("RegisterNO",selectmap.get("RegisterNO") );
-                bundle.putString("ProjectCode",selectmap.get("ProjectCode") );
-                bundle.putString("LiftCode",selectmap.get("LiftCode") );
-
-                if (selectmap.get("LiftCode").substring(0,3).equals("L-A"))
-                    tableindex = "1";
-                if (selectmap.get("LiftCode").substring(0,3).equals("L-D"))
-                    tableindex = "2";
-                if (selectmap.get("LiftCode").substring(0,3).equals("L-B"))
-                    tableindex = "3";
-                if (selectmap.get("LiftCode").substring(0,3).equals("L-C"))
-                    tableindex = "4";
-                if (spinner.getSelectedItemPosition() ==spinner.getCount()-1)
-                    tableindex = "5";
-
-                if (selectmap.get("state").equals("1")) {
-                    String tableindex2 = Common.mainDB.Gettabletype(
-                            selectmap.get("ContractNO"),selectmap.get("LiftNO"));
-                    bundle.putString("TableType",tableindex2 );
-                    if (tableindex2.equals("5") )
-                        intent =new Intent(createtask.this,yingji.class);
-                }
-                else {
-                    if (spinner.getSelectedItemPosition() ==0)
-                    {
-                        Toast.makeText(createtask.this,
-                                "请选择保养内容",Toast.LENGTH_SHORT).show();
-                        return true;
-                    }
-
-                    Common.mainDB.AddTask(selectmap.get("ContractNO"),selectmap.get("LiftNO"));
-                    bundle.putString("TableType", tableindex);
-                    if (tableindex.equals("5") )
-                        intent =new Intent(createtask.this,yingji.class);
-                }
-
-                intent.putExtras(bundle);
-                startActivityForResult(intent,1);
-
-
-                overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
-
-                return true;
-            case R.id.cleardata:
-                if (selectmap ==null)
-                {
-                    Toast.makeText(createtask.this,
-                            "请选择一个项目",Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(createtask.this);
-                builder.setTitle("提示");
-                builder.setCancelable(true);
-                String note =String.format("项目名称：%1$s 电梯编号：%2$s 是否需要清除"
-                        ,selectmap.get("ProjectName"),selectmap.get("LiftNO"));
-                builder.setMessage(note);
-                builder.setPositiveButton("确认",new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Common.mainDB.DelTaskinfo(selectmap.get("ContractNO"),selectmap.get("LiftNO"));
-                        alertDialog.dismiss();
-                        mapList = Common.BaseDB.Getprojectinfo(projectcode);
-                        MyAdapter myAdapter1 = (MyAdapter)listView.getAdapter();
-                        myAdapter1.notifyDataSetChanged();
-
-                    }
-                });
-                builder.setNegativeButton("取消",new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        alertDialog.dismiss();
-                    }
-                });
-
-                alertDialog = builder.create();
-                alertDialog.show();
-                return true;
-            case R.id.confimtask:
-                if (selectmap ==null)
-                {
-                    Toast.makeText(createtask.this,
-                            "没有项目",Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-//                if (!selectmap.get("state"). equals("1")) {
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//        Intent intent;
+//        Bundle bundle;
+//        switch (id)
+//        {
+//            case R.id.dotask:
+//
+//                if (selectmap ==null)
+//                {
 //                    Toast.makeText(createtask.this,
-//                            "请选择执行中的项目",Toast.LENGTH_SHORT).show();
+//                            "请选择一个项目",Toast.LENGTH_SHORT).show();
 //                    return true;
 //                }
-
-
-                intent =new Intent(createtask.this,taskfinish.class);
-                bundle =new Bundle();
-
-                bundle.putString("ContractNO",selectmap.get("ContractNO"));
+//
+//                if (selectmap.get("state").equals("3"))
+//                {
+//                    Toast.makeText(createtask.this,
+//                            "该项目已经完成，不能再次执行",Toast.LENGTH_SHORT).show();
+//                    return true;
+//                }
+//
+//
+//
+//                intent =new Intent(createtask.this,ScanTask.class);
+//                bundle =new Bundle();
+//                bundle.putString("ProjectName",selectmap.get("ProjectName"));
+//                bundle.putString("ContractNO",selectmap.get("ContractNO"));
+//                bundle.putString("ProjectType",ProjectType );
+//                bundle.putString("LiftType",selectmap.get("LiftType") );
+//                bundle.putString("CheckDate",Common.GetSysTimeshort());
+//                bundle.putString("EffectiveDate",selectmap.get("EffectiveDate") );
+//                bundle.putString("ContractEffectiveDate",selectmap.get("ContractEffectiveDate") );
+//                bundle.putString("ReachTime",Common.GetSysOnlyTime() );
+//                bundle.putString("CheckPerson",Common.work1name + "," + Common.work2name );
 //                bundle.putString("LiftNO",selectmap.get("LiftNO") );
-//                bundle.putString("TableType",Common.mainDB.Gettabletype(
-//                selectmap.get("ContractNO"),selectmap.get("LiftNO")));
-
-                intent.putExtras(bundle);
-                startActivityForResult(intent,1);
-
-                overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
-
-                return true;
-        }
-
-
-        return super.onOptionsItemSelected(item);
-    }
+//                bundle.putString("LiftNOTime",Common.GetSysOnlyTime() );
+//                bundle.putString("FactoryNo",selectmap.get("FactoryNo") );
+//                bundle.putString("RegisterNO",selectmap.get("RegisterNO") );
+//                bundle.putString("ProjectCode",selectmap.get("ProjectCode") );
+//                bundle.putString("LiftCode",selectmap.get("LiftCode") );
+//
+//                if (selectmap.get("LiftCode").substring(0,3).equals("L-A"))
+//                    tableindex = "1";
+//                if (selectmap.get("LiftCode").substring(0,3).equals("L-D"))
+//                    tableindex = "2";
+//                if (selectmap.get("LiftCode").substring(0,3).equals("L-B"))
+//                    tableindex = "3";
+//                if (selectmap.get("LiftCode").substring(0,3).equals("L-C"))
+//                    tableindex = "4";
+//                if (spinner.getSelectedItemPosition() ==spinner.getCount()-1)
+//                    tableindex = "5";
+//
+//                if (selectmap.get("state").equals("1")) {
+//                    String tableindex2 = Common.mainDB.Gettabletype(
+//                            selectmap.get("ContractNO"),selectmap.get("LiftNO"));
+//                    bundle.putString("TableType",tableindex2 );
+//                    if (tableindex2.equals("5") )
+//                        intent =new Intent(createtask.this,yingji.class);
+//                }
+//                else {
+//                    if (spinner.getSelectedItemPosition() ==0)
+//                    {
+//                        Toast.makeText(createtask.this,
+//                                "请选择保养内容",Toast.LENGTH_SHORT).show();
+//                        return true;
+//                    }
+//
+//                    Common.mainDB.AddTask(selectmap.get("ContractNO"),selectmap.get("LiftNO"));
+//                    bundle.putString("TableType", tableindex);
+//                    if (tableindex.equals("5") )
+//                        intent =new Intent(createtask.this,yingji.class);
+//                }
+//
+//                intent.putExtras(bundle);
+//                startActivityForResult(intent,1);
+//
+//
+//                overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
+//
+//                return true;
+//            case R.id.cleardata:
+//                if (selectmap ==null)
+//                {
+//                    Toast.makeText(createtask.this,
+//                            "请选择一个项目",Toast.LENGTH_SHORT).show();
+//                    return true;
+//                }
+//
+//                AlertDialog.Builder builder = new AlertDialog.Builder(createtask.this);
+//                builder.setTitle("提示");
+//                builder.setCancelable(true);
+//                String note =String.format("项目名称：%1$s 电梯编号：%2$s 是否需要清除"
+//                        ,selectmap.get("ProjectName"),selectmap.get("LiftNO"));
+//                builder.setMessage(note);
+//                builder.setPositiveButton("确认",new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        Common.mainDB.DelTaskinfo(selectmap.get("ContractNO"),selectmap.get("LiftNO"));
+//                        alertDialog.dismiss();
+//                        mapList = Common.BaseDB.Getprojectinfo(projectcode);
+//                        MyAdapter myAdapter1 = (MyAdapter)listView.getAdapter();
+//                        myAdapter1.notifyDataSetChanged();
+//
+//                    }
+//                });
+//                builder.setNegativeButton("取消",new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        alertDialog.dismiss();
+//                    }
+//                });
+//
+//                alertDialog = builder.create();
+//                alertDialog.show();
+//                return true;
+//            case R.id.confimtask:
+//                if (selectmap ==null)
+//                {
+//                    Toast.makeText(createtask.this,
+//                            "没有项目",Toast.LENGTH_SHORT).show();
+//                    return true;
+//                }
+////                if (!selectmap.get("state"). equals("1")) {
+////                    Toast.makeText(createtask.this,
+////                            "请选择执行中的项目",Toast.LENGTH_SHORT).show();
+////                    return true;
+////                }
+//
+//
+//                intent =new Intent(createtask.this,taskfinish.class);
+//                bundle =new Bundle();
+//
+//                bundle.putString("ContractNO",selectmap.get("ContractNO"));
+////                bundle.putString("LiftNO",selectmap.get("LiftNO") );
+////                bundle.putString("TableType",Common.mainDB.Gettabletype(
+////                selectmap.get("ContractNO"),selectmap.get("LiftNO")));
+//
+//                intent.putExtras(bundle);
+//                startActivityForResult(intent,1);
+//
+//                overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
+//
+//                return true;
+//        }
+//
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
 
     class MyAdapter extends BaseAdapter {

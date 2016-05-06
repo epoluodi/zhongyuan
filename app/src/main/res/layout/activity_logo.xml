@@ -21,7 +21,7 @@
         android:id="@+id/wordk1"
         android:textSize="24dp"
         android:layout_centerHorizontal="true"
-        android:text="ZYDT-001"
+
         android:singleLine="true"
         android:layout_above="@+id/wordk2"
         android:layout_marginBottom="5dp"
@@ -35,7 +35,7 @@
         android:layout_centerHorizontal="true"
         android:drawableLeft="@drawable/work2"
         android:id="@+id/wordk2"
-android:text="ZYDT-002"
+
         android:layout_marginTop="5dp"
         android:textSize="24dp"
         android:singleLine="true"
@@ -71,7 +71,7 @@ android:text="ZYDT-002"
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ver 2.0"
+        android:text="Ver 2.0.1"
         android:id="@+id/txtver"
         android:layout_centerHorizontal="true"
        android:layout_alignParentBottom="true"

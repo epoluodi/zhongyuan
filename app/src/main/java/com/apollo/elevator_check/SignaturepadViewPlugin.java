@@ -133,7 +133,8 @@ public class SignaturepadViewPlugin extends Activity {
 //        canvas.drawColor(Color.TRANSPARENT);
 //        canvas.drawBitmap(bitmap, 0, 0, null);
         OutputStream stream = new FileOutputStream(photo);
-        bitmap.compress(Bitmap.CompressFormat.PNG, 80, stream);
+        bitmap=zoomImg(bitmap,754/4,306/4);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream);
         stream.flush();
         stream.close();
 

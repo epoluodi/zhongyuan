@@ -24,6 +24,7 @@ import org.ksoap2.serialization.PropertyInfo;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -261,8 +262,18 @@ public class uploaddata extends Activity {
                             if (signfile.contains("sign_"))
                             {
                                 String base64img = "";
-                                base64img  = imgToBase64(Environment.getExternalStorageDirectory().getAbsolutePath()
-                                        + File.separator + "zhongyuan/"+signfile.replace("sign_","")+".png");
+                                byte[] buffer=null;
+                                try {
+                                    FileInputStream fileInputStream = new FileInputStream(Environment.getExternalStorageDirectory().getAbsolutePath()
+                                            + File.separator + "zhongyuan/" + signfile.replace("sign_", "") + ".png");
+                                    buffer=new byte[fileInputStream.available()];
+                                    fileInputStream.read(buffer);
+                                    fileInputStream.close();
+
+                                }
+                                catch (Exception e)
+                                {e.printStackTrace();}
+                                base64img  = imgToBase64(buffer);
                                 propertyInfos = new PropertyInfo[2];
                                 propertyInfo = new PropertyInfo();
                                 propertyInfo.setName("pxid");
@@ -394,6 +405,15 @@ public class uploaddata extends Activity {
         }
     };
 
+
+
+
+    String imgToBase64(byte[] buffer)
+    {
+        if (buffer==null)
+            return "";
+        return Base64.encodeToString(buffer,Base64.DEFAULT);
+    }
 
 
 
