@@ -54,6 +54,7 @@ public class ScanTask extends Activity {
     Button photo;
     RadioButton checkOK,checkNO;
     String photofilename;
+    private String scantype;
 
     private boolean isScaning = false;
 
@@ -293,7 +294,7 @@ public class ScanTask extends Activity {
 
 
         scancode.setText(code);
-        String iteminfo  = Common.BaseDB.GetscanCodeinfo(code,scandata.TableType);
+        String iteminfo  = Common.BaseDB.GetscanCodeinfo(code,scandata.TableType,scandata.ProjectType);
         if (iteminfo.equals(""))
         {
             Toast.makeText(ScanTask.this,"无相关记录",Toast.LENGTH_SHORT).show();
@@ -372,7 +373,7 @@ public class ScanTask extends Activity {
                 }
 
 
-                String iteminfo = Common.BaseDB.GetscanCodeinfo(strscancode, scandata.TableType);
+                String iteminfo = Common.BaseDB.GetscanCodeinfo(strscancode, scandata.TableType,scandata.ProjectType);
                 if (iteminfo.equals("")) {
                     Toast.makeText(ScanTask.this, "无相关记录", Toast.LENGTH_SHORT).show();
                     return false;

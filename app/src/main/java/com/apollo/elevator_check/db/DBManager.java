@@ -369,7 +369,7 @@ public class DBManager {
         return result;
     }
 
-    public String GetscanCodeinfo(String cancode,String tableindex)
+    public String GetscanCodeinfo(String cancode,String tableindex,String projecttype)
     {
         String strvar="";
         try {
@@ -377,19 +377,44 @@ public class DBManager {
             if (tableindex.equals("5"))
                 cursor= db.rawQuery("select Floors from DoorHead_TABLE where FloorCode= ? ", new String[]{cancode});
             if (tableindex.equals("1"))
-                cursor= db.rawQuery("select iteminfo from WHBYJL_TABLE where itemcode= ? ", new String[]{cancode});
+                cursor= db.rawQuery("select iteminfo,itemtype from WHBYJL_TABLE where itemcode= ? ", new String[]{cancode});
             if (tableindex.equals("2"))
-                cursor= db.rawQuery("select iteminfo from ZaWulift_WBJL_TABLE where itemcode= ? ", new String[]{cancode});
+                cursor= db.rawQuery("select iteminfo,itemtype from ZaWulift_WBJL_TABLE where itemcode= ? ", new String[]{cancode});
             if (tableindex.equals("3"))
-                cursor= db.rawQuery("select iteminfo from FuTi_WBJL_TABLE where itemcode= ? ", new String[]{cancode});
+                cursor= db.rawQuery("select iteminfo,itemtype from FuTi_WBJL_TABLE where itemcode= ? ", new String[]{cancode});
             if (tableindex.equals("4"))
-                cursor= db.rawQuery("select iteminfo from YeYalift_WBJL_TABLE where itemcode= ? ", new String[]{cancode});
+                cursor= db.rawQuery("select iteminfo,itemtype from YeYalift_WBJL_TABLE where itemcode= ? ", new String[]{cancode});
 
 
 
-
+            String mark="";
             if (cursor.moveToNext()) {
                 strvar = cursor.getString(0);
+                mark = cursor.getString(1);
+                cursor.close();
+                if (projecttype.equals("△（半月保养项目）"))
+                {
+                    if (!mark.contains("△"))
+                        return "";
+                }
+                if (projecttype.equals("△+■（季度保养项目）"))
+                {
+                    if (!mark.contains("△") && !mark.contains("■"))
+                        return "";
+                }
+                if (projecttype.equals("△+■+○（半年保养项目）"))
+                {
+                    if (!mark.contains("△") && !mark.contains("■")
+                            && mark.contains("○"))
+                        return "";
+                }
+//                if (projecttype.equals("△+■+○+★（全年保养项目）"))
+//                {
+//                    if (!mark.contains("△") && !mark.contains("■")
+//                            && mark.contains("○") && mark.contains("★"))
+//                        return "";
+//                }
+
             }
             else
                 return "";
