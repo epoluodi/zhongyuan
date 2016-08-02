@@ -41,7 +41,7 @@
         android:singleLine="true"
         android:imeOptions="actionDone"
         android:paddingLeft="5dp"
-        android:inputType="number"
+        android:inputType="text"
         />
 
     <!--android:text="A-AGYF201010"-->
@@ -92,7 +92,7 @@
             android:singleLine="true"
             android:imeOptions="actionDone"
             android:paddingLeft="5dp"
-            android:inputType="number"
+            android:inputType="text"
             />
         <Button
             android:layout_width="70dp"

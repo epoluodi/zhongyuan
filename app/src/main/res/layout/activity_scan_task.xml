@@ -31,7 +31,7 @@
         android:singleLine="true"
         android:layout_marginTop="5dp"
         android:paddingLeft="5dp"
-        android:inputType="number"
+        android:inputType="text"
         />
     <Button
         android:layout_width="fill_parent"
