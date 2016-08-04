@@ -14,10 +14,13 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.android.barcodescandemo.ScannerInerface;
 import com.apollo.elevator_check.Common.Common;
 import com.apollo.elevator_check.WebService.Webservice;
 import com.apollo.elevator_check.db.DBManager;
@@ -34,7 +37,8 @@ public class Logo extends Activity {
     EditText editText1;
     EditText editText2;
     Button loginbutton;
-
+    RadioButton radioButton1,radioButton2;
+    ScannerInerface scannerInerface;
     private boolean isScaning = false;
 //    private ScanManager mScanManager;
     private SoundPool soundpool = null;
@@ -64,7 +68,8 @@ public class Logo extends Activity {
 //            android.util.Log.i("debug", "----codetype--" + temp);
 //            barcodeStr = new String(barcode, 0, barocodelen);
 
-            barcodeStr = intent.getExtras().getString ("data");
+//            barcodeStr = intent.getExtras().getString ("data");
+            barcodeStr = intent.getStringExtra("value");
             Log.i("scandata:",barcodeStr);
             if (editText1.isFocused())
             {
@@ -103,6 +108,21 @@ public class Logo extends Activity {
         imageViewsetting =(ImageView)findViewById(R.id.setting);
         imageViewsetting.setOnClickListener(onClickListenersetting);
         editText1 =(EditText) findViewById(R.id.wordk1);
+
+        radioButton1 = (RadioButton)findViewById(R.id.dd);
+        radioButton2 = (RadioButton)findViewById(R.id.idata);
+        radioButton1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b)
+                    Common.scantype=1;
+                else {
+                    Common.scantype = 2;
+                    initidatascan();
+                }
+            }
+        });
+
 
         editText1.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -168,11 +188,19 @@ public class Logo extends Activity {
             Common.CopyDb(Logo.this);
 
 
-        thread=new Thread(runnable);
-        iswhile=true;
-        thread.start();
+
+        initidatascan();
     }
 
+    private void initidatascan()
+    {
+        scannerInerface = new ScannerInerface(this);
+        scannerInerface.open();
+        scannerInerface.enablePlayBeep(true);
+        scannerInerface.lockScanKey();
+        scannerInerface.setOutputMode(1);
+
+    }
 
 
     @Override
@@ -322,32 +350,5 @@ public class Logo extends Activity {
 
 
 
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
 
-
-            while (iswhile)
-            {
-                try
-                {
-
-
-
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                    try
-                    {
-                        Thread.sleep(10000);
-                    }
-                    catch (Exception ee)
-                    {e.printStackTrace();}
-                }
-
-
-            }
-        }
-    };
 }

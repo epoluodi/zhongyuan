@@ -27,10 +27,12 @@ import java.text.SimpleDateFormat;
  * Created by Administrator on 14-10-7.
  */
 public class Common {
-    public final static String SCAN_ACTION = "scanseuic";//扫描结束action
-//    com.android.server.scannerservice.broadcast
+    public final static String SCAN_ACTION = "android.intent.action.SCANRESULT";//扫描结束action
+//    public final static String SCAN_ACTION = "scanseuic";//扫描结束action
+//      android.intent.action.SCANRESULT
 
 
+    public static int scantype = 1;
     public final static Object olock = new Object();
     public static String ServerIP;
     public static String ServerWCF;

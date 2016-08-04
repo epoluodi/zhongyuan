@@ -5,12 +5,31 @@
     android:background="@drawable/logo"
     tools:context=".Logo">
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="180dp"
-        android:id="@+id/v1"
-        />
+
+
+    <RadioGroup
+        android:visibility="gone"
+        android:clickable="true"
+        android:layout_centerVertical="true"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:checked="true"
+            android:id="@+id/dd"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="东大设备"/>
+        <RadioButton
+            android:id="@+id/idata"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="IDATA设备"/>
+    </RadioGroup>
     <EditText
         android:layout_width="300dp"
         android:layout_height="50dp"
@@ -21,7 +40,7 @@
         android:id="@+id/wordk1"
         android:textSize="24dp"
         android:layout_centerHorizontal="true"
-android:text="ZYDT-001"
+
         android:singleLine="true"
         android:layout_above="@+id/wordk2"
         android:layout_marginBottom="5dp"
@@ -35,7 +54,7 @@ android:text="ZYDT-001"
         android:layout_centerHorizontal="true"
         android:drawableLeft="@drawable/work2"
         android:id="@+id/wordk2"
-        android:text="ZYDT-002"
+
         android:layout_marginTop="5dp"
         android:textSize="24dp"
         android:singleLine="true"
