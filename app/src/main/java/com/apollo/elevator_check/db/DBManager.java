@@ -112,7 +112,7 @@ public class DBManager {
                 map.put("ContractEffectiveDate",cursor.getString(6));
                 map.put("LiftNO",cursor.getString(7));
                 map.put("LiftCode",cursor.getString(8));
-                map.put("FactoryNO",cursor.getString(9));
+                map.put("FactoryNo",cursor.getString(9));
                 map.put("RegisterNO",cursor.getString(10));
                 map.put("pxid",cursor.getString(11));
                 map.put("state",Common.mainDB.Gettaskstate(cursor.getString(2),cursor.getString(7)));

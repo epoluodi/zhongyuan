@@ -91,8 +91,8 @@ public class createtask extends Activity {
 //            byte temp = intent.getByteExtra("barcodeType", (byte) 0);
 //            android.util.Log.i("debug", "----codetype--" + temp);
 //            barcodeStr = new String(barcode, 0, barocodelen);
-//            barcodeStr = intent.getExtras().getString("data");
-            barcodeStr = intent.getStringExtra("value");
+            barcodeStr = intent.getExtras().getString("data");
+//            barcodeStr = intent.getStringExtra("value");
             if (projedtno.isFocused())
             {
                 projedtno.setText(barcodeStr);

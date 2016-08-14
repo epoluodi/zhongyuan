@@ -75,8 +75,10 @@ public class taskfinish extends Activity {
 //            byte temp = intent.getByteExtra("barcodeType", (byte) 0);
 //            android.util.Log.i("debug", "----codetype--" + temp);
 //            barcodeStr = new String(barcode, 0, barocodelen);
-//            barcodeStr = intent.getExtras().getString ("data");
-            barcodeStr = intent.getStringExtra("value");
+
+
+            barcodeStr = intent.getExtras().getString ("data");
+//            barcodeStr = intent.getStringExtra("value");
             scancode.setText(barcodeStr);
             onKeyListenerliftno.onKey(scancode,0,new KeyEvent(KeyEvent.ACTION_UP,66));
             scancode.requestFocus();

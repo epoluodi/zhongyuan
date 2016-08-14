@@ -27,8 +27,11 @@ import java.text.SimpleDateFormat;
  * Created by Administrator on 14-10-7.
  */
 public class Common {
-    public final static String SCAN_ACTION = "android.intent.action.SCANRESULT";//扫描结束action
-//    public final static String SCAN_ACTION = "scanseuic";//扫描结束action
+    //    public final static String SCAN_ACTION = "android.intent.action.SCANRESULT";//扫描结束action
+
+
+    public final static String SCAN_ACTION = "scanseuic";//扫描结束action
+
 //      android.intent.action.SCANRESULT
 
 
@@ -44,14 +47,14 @@ public class Common {
     public static String work1name;
     public static String work2;
     public static String work2name;
-    public static String projectcode="";
+    public static String projectcode = "";
 
     public static DBManager mainDB;
     public static DBManager BaseDB;
-    public static String GetconfigServer()
-    {
+
+    public static String GetconfigServer() {
         try {
-            File file = new File(Environment.getExternalStorageDirectory()+"/zhongyuan/config.json");
+            File file = new File(Environment.getExternalStorageDirectory() + "/zhongyuan/config.json");
             if (!file.exists())
                 return "";
             FileInputStream fileInputStream = new FileInputStream(file);
@@ -62,9 +65,7 @@ public class Common {
 
             JSONObject jsonObject = new JSONObject(strbuffer);
             return jsonObject.get("server").toString();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             return "";
         }
@@ -101,15 +102,14 @@ public class Common {
     }
 
 
-
     public static void CopyDb(Context context) {
         InputStream inputStream;
         try {
             inputStream = context.getResources().openRawResource(R.raw.main);
             byte[] bytebuff = new byte[inputStream.available()];
             inputStream.read(bytebuff);
-            File file = new File(Environment.getExternalStorageDirectory()+"/zhongyuan/main.db");
-            FileOutputStream fileOutputStream =new FileOutputStream(file);
+            File file = new File(Environment.getExternalStorageDirectory() + "/zhongyuan/main.db");
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
             fileOutputStream.write(bytebuff);
             fileOutputStream.close();
         } catch (Exception e) {
@@ -118,34 +118,30 @@ public class Common {
     }
 
 
-    public static String GetSysTime()
-    {
-        SimpleDateFormat sDateFormat   =   new   SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String   date   =   sDateFormat.format(new   java.util.Date());
+    public static String GetSysTime() {
+        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String date = sDateFormat.format(new java.util.Date());
         return date;
     }
 
-    public static String GetSysTimeshort()
-    {
-        SimpleDateFormat sDateFormat   =   new   SimpleDateFormat("yyyy-MM-dd");
-        String   date   =   sDateFormat.format(new   java.util.Date());
+    public static String GetSysTimeshort() {
+        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String date = sDateFormat.format(new java.util.Date());
         return date;
     }
 
-    public static String GetSysOnlyTime()
-    {
-        SimpleDateFormat sDateFormat   =   new   SimpleDateFormat("HH:mm:ss");
-        String   date   =   sDateFormat.format(new   java.util.Date());
+    public static String GetSysOnlyTime() {
+        SimpleDateFormat sDateFormat = new SimpleDateFormat("HH:mm:ss");
+        String date = sDateFormat.format(new java.util.Date());
         return date;
     }
 
 
     //缩略图
-    public static Bitmap decodeBitmap(String realbitmap,int inSampleSize) {
+    public static Bitmap decodeBitmap(String realbitmap, int inSampleSize) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(realbitmap,options);//此时返回bm为空
-
+        BitmapFactory.decodeFile(realbitmap, options);//此时返回bm为空
 
 
         options.inJustDecodeBounds = false;
@@ -163,10 +159,10 @@ public class Common {
         }
         if (be <= 0)
             be = 1;
-        if (inSampleSize==0)
-            options.inSampleSize = (int)(be*0.9);
+        if (inSampleSize == 0)
+            options.inSampleSize = (int) (be * 0.9);
         else
-            options.inSampleSize =inSampleSize;
+            options.inSampleSize = inSampleSize;
         Bitmap bitmap = BitmapFactory.decodeFile(realbitmap, options);
         return bitmap;
     }
