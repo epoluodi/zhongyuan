@@ -68,8 +68,8 @@ public class Logo extends Activity {
 //            android.util.Log.i("debug", "----codetype--" + temp);
 //            barcodeStr = new String(barcode, 0, barocodelen);
 
-            barcodeStr = intent.getExtras().getString ("data");
-//            barcodeStr = intent.getStringExtra("value");
+//            barcodeStr = intent.getExtras().getString ("data");
+            barcodeStr = intent.getStringExtra("value");
             Log.i("scandata:",barcodeStr);
             if (editText1.isFocused())
             {
@@ -189,7 +189,7 @@ public class Logo extends Activity {
 
 
 
-//        initidatascan();
+        initidatascan();
     }
 
     private void initidatascan()

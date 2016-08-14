@@ -84,8 +84,8 @@ public class ScanTask extends Activity {
 
 
 
-            barcodeStr = intent.getExtras().getString ("data");
-//            barcodeStr = intent.getStringExtra("value");
+//            barcodeStr = intent.getExtras().getString ("data");
+            barcodeStr = intent.getStringExtra("value");
             switch ((int)(Integer.valueOf( scandata.TableType)))
             {
                 case 1:
