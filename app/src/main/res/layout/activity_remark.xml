@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical"
+    tools:context="com.apollo.elevator_check.RemarkActivity">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:background="@color/steelblue"
+        android:gravity="center"
+        android:text="备注信息"
+        android:textColor="@color/black"
+        android:textSize="22dp"
+
+        />
+
+    <EditText
+        android:id="@+id/remark"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:background="@null"
+        android:gravity="top"
+        android:layout_weight="1"
+        android:text="121231231231231231231231231231231231231231231231231231231231231231231233" />
+    <Button
+        android:id="@+id/ok"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_above="@+id/scan1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/buttonclickstyle"
+        android:text="确定"
+        android:textSize="24dp" />
+</LinearLayout>

@@ -52,6 +52,7 @@ public class ScanTask extends Activity {
     TextView textViewtime;
     Button scan1;
     Button photo;
+    Button remark;
     RadioButton checkOK,checkNO;
     String photofilename;
     private String scantype;
@@ -172,7 +173,8 @@ public class ScanTask extends Activity {
         scandata.LiftCode = bundle.getString("LiftCode");
         scandata.pxid = bundle.getString("pxid");
 
-
+        remark = (Button)findViewById(R.id.remark);
+        remark.setOnClickListener(onClickListenerrenmark);
         photo = (Button)findViewById(R.id.photo);
         photo.setOnClickListener(onClickListenerphoto);
         scan1 = (Button)findViewById(R.id.scan1);
@@ -201,6 +203,19 @@ public class ScanTask extends Activity {
 
 
     }
+
+
+    View.OnClickListener onClickListenerrenmark = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent intent=new Intent(ScanTask.this,RemarkActivity.class);
+            intent.putExtra("pxid",scandata.pxid);
+            startActivity(intent);
+            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+
+        }
+    };
+
 
 
     CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
