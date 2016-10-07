@@ -112,12 +112,51 @@ public class createtask extends Activity {
 
     };
 
+
+    private BroadcastReceiver mScanReceiverDD = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // TODO Auto-generated method stub
+            isScaning = false;
+//            soundpool.play(soundid, 1, 1, 0, 0, 1);
+
+
+//            byte[] barocode = intent.getByteArrayExtra("barocode");
+//            byte[] barcode = intent.getByteArrayExtra("barcode");
+//            int barocodelen = intent.getIntExtra("length", 0);
+//            byte temp = intent.getByteExtra("barcodeType", (byte) 0);
+//            android.util.Log.i("debug", "----codetype--" + temp);
+//            barcodeStr = new String(barcode, 0, barocodelen);
+
+            barcodeStr = intent.getExtras().getString("data");
+//            barcodeStr = intent.getStringExtra("value");
+            if (projedtno.isFocused())
+            {
+                projedtno.setText(barcodeStr);
+                onKeyListenerprojectno.onKey(projedtno, 0, new KeyEvent(KeyEvent.ACTION_UP, 66));
+                liftno.requestFocus();
+
+                return;
+            }
+            if (liftno.isFocused())
+            {
+                liftno.setText(barcodeStr);
+                onKeyListenerliftno.onKey(liftno,0,new KeyEvent(KeyEvent.ACTION_UP,66));
+                return;
+            }
+        }
+
+    };
+
+
     @Override
     protected void onPause() {
         // TODO Auto-generated method stub
         super.onPause();
 
         unregisterReceiver(mScanReceiver);
+        unregisterReceiver(mScanReceiverDD);
     }
 
 
@@ -130,6 +169,12 @@ public class createtask extends Activity {
         IntentFilter filter = new IntentFilter();
         filter.addAction(Common.SCAN_ACTION);
         registerReceiver(mScanReceiver, filter);
+
+        IntentFilter filter1 = new IntentFilter();
+        filter1.addAction(Common.SCAN_ACTION_DD);
+        registerReceiver(mScanReceiverDD, filter1);
+
+
     }
 
 

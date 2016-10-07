@@ -292,6 +292,37 @@ public class uploaddata extends Activity {
                                     return;
                                 }
                             }
+
+
+
+                            String content = RemarkActivity.ReadTxtFile(getFilesDir() + "/" + pxid + "_" + LiftNO + ".txt");
+                            propertyInfos = new PropertyInfo[3];
+                            propertyInfo = new PropertyInfo();
+                            propertyInfo.setName("pxid");
+                            propertyInfo.setValue(pxid);
+                            propertyInfos[0] = propertyInfo;
+                            propertyInfo = new PropertyInfo();
+                            propertyInfo.setName("liftno");
+                            propertyInfo.setValue(LiftNO);
+                            propertyInfos[1] = propertyInfo;
+                            propertyInfo = new PropertyInfo();
+                            propertyInfo.setName("content");
+                            propertyInfo.setValue(content);
+                            propertyInfos[2] = propertyInfo;
+
+
+                            Webservice webservice = new Webservice(Common.ServerWCF,10000);
+                            String r = webservice.PDA_GetInterFaceForStringNew(propertyInfos,"A_PDA_submitRemark");
+                            if (r.equals("-1"))
+                            {
+                                handler.sendEmptyMessage(0);
+                                return;
+                            }
+                            File file = new File(getFilesDir() + "/" + pxid + "_" + LiftNO + ".txt");
+                            file.delete();
+
+
+
                             Common.mainDB.DelTaskinfo(ContractNO,LiftNO);
 
                             Message message=handler.obtainMessage();

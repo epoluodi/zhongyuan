@@ -30,7 +30,7 @@ public class Common {
         public final static String SCAN_ACTION = "android.intent.action.SCANRESULT";//扫描结束action
 
 
-//    public final static String SCAN_ACTION = "scanseuic";//扫描结束action
+    public final static String SCAN_ACTION_DD = "scanseuic";//扫描结束action
 
 //      android.intent.action.SCANRESULT
 
@@ -48,6 +48,7 @@ public class Common {
     public static String work2;
     public static String work2name;
     public static String projectcode = "";
+    public static Boolean deviceType =false;
 
     public static DBManager mainDB;
     public static DBManager BaseDB;

@@ -23,7 +23,7 @@ public class RemarkActivity extends Activity {
 
     private Button btnok;
     private EditText remark;
-    private String pxid;
+    private String pxid, liftno;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,19 +33,21 @@ public class RemarkActivity extends Activity {
         remark = (EditText) findViewById(R.id.remark);
 
         pxid = getIntent().getStringExtra("pxid");
+        liftno = getIntent().getStringExtra("liftno");
         btnok.setOnClickListener(onClickListenerbtnok);
 
 
-        String content = ReadTxtFile(getFilesDir() + "/" + pxid + ".txt");
+        String content = ReadTxtFile(getFilesDir() + "/" + pxid + "_" + liftno + ".txt");
         remark.setText(content);
+        remark.setHint("填写备注信息");
     }
 
 
     View.OnClickListener onClickListenerbtnok = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            WriteTxt(getFilesDir() + "/" + pxid + ".txt", remark.getText().toString());
-
+            WriteTxt(getFilesDir() + "/" + pxid + "_" + liftno + ".txt", remark.getText().toString());
+            finish();
         }
     };
 

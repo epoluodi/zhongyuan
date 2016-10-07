@@ -6,97 +6,100 @@
     tools:context=".Logo">
 
 
-
     <RadioGroup
-        android:visibility="gone"
-        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:clickable="true"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:visibility="gone">
 
         <RadioButton
-            android:checked="true"
             android:id="@+id/dd"
-            android:textColor="@color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="东大设备"/>
+            android:checked="true"
+            android:text="东大设备"
+            android:textColor="@color/black" />
+
         <RadioButton
             android:id="@+id/idata"
-            android:textColor="@color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="IDATA设备"/>
+            android:text="IDATA设备"
+            android:textColor="@color/black" />
     </RadioGroup>
-    <EditText
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:background="@drawable/edittext_style"
-        android:inputType="text"
 
-        android:drawableLeft="@drawable/work1"
+    <EditText
         android:id="@+id/wordk1"
-        android:textSize="24dp"
-        android:layout_centerHorizontal="true"
-
-        android:singleLine="true"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
         android:layout_above="@+id/wordk2"
+
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="5dp"
-
-        />
-    <EditText
-        android:layout_width="300dp"
-        android:layout_height="50dp"
         android:background="@drawable/edittext_style"
-        android:inputType="text"
-        android:layout_centerHorizontal="true"
-        android:drawableLeft="@drawable/work2"
-        android:id="@+id/wordk2"
+        android:drawableLeft="@drawable/work1"
 
-        android:layout_marginTop="5dp"
-        android:textSize="24dp"
+        android:inputType="numberDecimal"
         android:singleLine="true"
-        android:layout_above="@+id/buttonlogin"
-        android:layout_marginBottom="10dp"
-
+        android:textSize="24dp"
 
         />
-    <Button
+
+    <EditText
+        android:id="@+id/wordk2"
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:background="@drawable/buttonclickstyle"
-
-        android:layout_marginTop="20dp"
+        android:layout_above="@+id/buttonlogin"
         android:layout_centerHorizontal="true"
-        android:text="登录"
-        android:textSize="30dp"
-        android:id="@+id/buttonlogin"
-        android:layout_above="@+id/txtver"
         android:layout_marginBottom="20dp"
+        android:layout_marginTop="5dp"
+
+        android:background="@drawable/edittext_style"
+        android:drawableLeft="@drawable/work2"
+        android:inputType="numberDecimal"
+        android:singleLine="true"
+        android:textSize="24dp"
+
+
         />
+
+    <Button
+        android:id="@+id/buttonlogin"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+
+        android:layout_above="@+id/txtver"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/buttonclickstyle"
+        android:text="登录"
+        android:textSize="30dp" />
 
     <ImageView
+        android:id="@+id/setting"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:background="@drawable/infoclickstyle"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"
-        android:id="@+id/setting"
-        />
+        android:layout_marginTop="5dp"
+        android:background="@drawable/infoclickstyle" />
 
     <TextView
+        android:id="@+id/txtver"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ver 2.0.2"
-        android:id="@+id/txtver"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-       android:layout_alignParentBottom="true"
-        android:textColor="@color/blackTransparent9"
         android:layout_marginBottom="10dp"
-        />
+        android:text="Ver 2.0.4"
+        android:textColor="@color/blackTransparent9" />
+
+
+
 
 
 </RelativeLayout>

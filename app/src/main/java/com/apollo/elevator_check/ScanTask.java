@@ -125,12 +125,76 @@ public class ScanTask extends Activity {
 
     };
 
+
+    private BroadcastReceiver mScanReceiverDD = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // TODO Auto-generated method stub
+            isScaning = false;
+
+//            soundpool.play(soundid, 1, 1, 0, 0, 1);
+
+
+//            byte[] barocode = intent.getByteArrayExtra("barocode");
+//            byte[] barcode = intent.getByteArrayExtra("barcode");
+//            int barocodelen = intent.getIntExtra("length", 0);
+//            byte temp = intent.getByteExtra("barcodeType", (byte) 0);
+//            android.util.Log.i("debug", "----codetype--" + temp);
+//            barcodeStr = intent.getExtras().getString ("data");
+
+
+
+
+            barcodeStr = intent.getExtras().getString ("data");
+//            barcodeStr = intent.getStringExtra("value");
+            switch ((int)(Integer.valueOf( scandata.TableType)))
+            {
+                case 1:
+                    if (!barcodeStr.contains("G-A")) {
+                        Toast.makeText(ScanTask.this,"条码不属于概项目",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    break;
+                case 2:
+                    if (!barcodeStr.contains("G-D")) {
+                        Toast.makeText(ScanTask.this,"条码不属于概项目",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    break;
+                case 3:
+                    if (!barcodeStr.contains("G-B")) {
+                        Toast.makeText(ScanTask.this,"条码不属于概项目",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    break;
+                case 4:
+                    if (!barcodeStr.contains("G-C")) {
+                        Toast.makeText(ScanTask.this,"条码不属于概项目",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    break;
+
+            }
+
+
+            scancode.setText(barcodeStr);
+            onKeyListenerliftno.onKey(scancode,0,new KeyEvent(KeyEvent.ACTION_UP,66));
+            scancode.requestFocus();
+
+        }
+
+    };
+
+
+
     @Override
     protected void onPause() {
         // TODO Auto-generated method stub
         super.onPause();
 
         unregisterReceiver(mScanReceiver);
+        unregisterReceiver(mScanReceiverDD);
     }
 
 
@@ -143,6 +207,11 @@ public class ScanTask extends Activity {
         IntentFilter filter = new IntentFilter();
         filter.addAction(Common.SCAN_ACTION);
         registerReceiver(mScanReceiver, filter);
+
+        IntentFilter filter1 = new IntentFilter();
+        filter1.addAction(Common.SCAN_ACTION_DD);
+        registerReceiver(mScanReceiverDD, filter1);
+
     }
 
 
@@ -210,6 +279,7 @@ public class ScanTask extends Activity {
         public void onClick(View view) {
             Intent intent=new Intent(ScanTask.this,RemarkActivity.class);
             intent.putExtra("pxid",scandata.pxid);
+            intent.putExtra("liftno",scandata.LiftNO);
             startActivity(intent);
             overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 
