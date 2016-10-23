@@ -2,6 +2,7 @@ package com.apollo.elevator_check;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,6 +11,17 @@ import android.content.IntentFilter;
 
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.IsoDep;
+import android.nfc.tech.MifareClassic;
+import android.nfc.tech.MifareUltralight;
+import android.nfc.tech.Ndef;
+import android.nfc.tech.NdefFormatable;
+import android.nfc.tech.NfcA;
+import android.nfc.tech.NfcB;
+import android.nfc.tech.NfcF;
+import android.nfc.tech.NfcV;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.view.KeyEvent;
@@ -68,6 +80,9 @@ public class createtask extends Activity {
 
     String tableindex ="1";
     String ProjectType = "";
+
+    NfcAdapter nfcAdapter;
+
 
     private boolean isScaning = false;
     private SoundPool soundpool = null;
@@ -157,6 +172,7 @@ public class createtask extends Activity {
 
         unregisterReceiver(mScanReceiver);
         unregisterReceiver(mScanReceiverDD);
+        unregisterReceiver();
     }
 
 
@@ -173,11 +189,76 @@ public class createtask extends Activity {
         IntentFilter filter1 = new IntentFilter();
         filter1.addAction(Common.SCAN_ACTION_DD);
         registerReceiver(mScanReceiverDD, filter1);
-
+        registerReceiver();
 
     }
 
 
+
+
+    PendingIntent mPendingIntent;
+
+    public void registerReceiver() {
+        if (nfcAdapter != null) {
+            String[][] TECHLISTS = new String[][] { { IsoDep.class.getName() },
+                    { NfcV.class.getName() }, { NfcF.class.getName() },{ NfcA.class.getName() }
+                    ,{ NfcB.class.getName() },{ NdefFormatable.class.getName() },
+                    { MifareClassic.class.getName() },
+                    { MifareUltralight.class.getName() },{ Ndef.class.getName() }};
+            IntentFilter[] mFilters = new IntentFilter[]{
+                    new IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED),
+                    new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED),
+                    new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED)};
+            mPendingIntent = PendingIntent.getActivity(this, 0,
+                    new Intent(this, this.getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+            try {
+                nfcAdapter.enableForegroundDispatch(this, mPendingIntent,  null, null);
+            } catch (Exception e) {
+            }
+        }
+    }
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Tag tagFromIntent = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        String ndcid= ByteArrayToHexString(tagFromIntent.getId());
+
+
+        projedtno.setText(ndcid);
+        onKeyListenerprojectno.onKey(projedtno, 0, new KeyEvent(KeyEvent.ACTION_UP, 66));
+        liftno.requestFocus();
+
+
+//        Toast.makeText(this,ndcid,Toast.LENGTH_SHORT).show();
+    }
+
+
+    String ByteArrayToHexString(byte[] inarray) {
+        int i, j, in;
+        String[] hex = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A",
+                "B", "C", "D", "E", "F" };
+        String out = "";
+        for (j = 0; j < inarray.length; ++j) {
+            in = inarray[j] & 0xff;
+            i = (in >> 4) & 0x0f;
+            out += hex[i];
+            i = in & 0x0f;
+            out += hex[i];
+        }
+        return out;
+    }
+
+
+    public void unregisterReceiver() {
+        if (nfcAdapter != null) {
+            try {
+                nfcAdapter.disableForegroundDispatch(this);
+            } catch (Exception e) {
+            }
+        }
+    }
 
 
 
@@ -204,6 +285,11 @@ public class createtask extends Activity {
         buttonclear.setOnClickListener(onClickListenerbuttonclear);
         buttonconfim=(Button)findViewById(R.id.buttonconfim);
         buttonconfim.setOnClickListener(onClickListenerbuttonconfim);
+
+
+        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+
+
 
         title=(TextView)findViewById(R.id.title);
         scan1 = (Button)findViewById(R.id.scan1);
