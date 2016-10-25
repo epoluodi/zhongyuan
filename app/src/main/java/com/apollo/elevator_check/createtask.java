@@ -225,7 +225,8 @@ public class createtask extends Activity {
         Tag tagFromIntent = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
         String ndcid= ByteArrayToHexString(tagFromIntent.getId());
 
-
+        MifareClassic mfc =  MifareClassic.get(tagFromIntent);
+        //读取用户数据
         projedtno.setText(ndcid);
         onKeyListenerprojectno.onKey(projedtno, 0, new KeyEvent(KeyEvent.ACTION_UP, 66));
         liftno.requestFocus();
