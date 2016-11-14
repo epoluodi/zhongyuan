@@ -1,11 +1,24 @@
 package com.apollo.elevator_check;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.SoundPool;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.IsoDep;
+import android.nfc.tech.MifareClassic;
+import android.nfc.tech.MifareUltralight;
+import android.nfc.tech.Ndef;
+import android.nfc.tech.NdefFormatable;
+import android.nfc.tech.NfcA;
+import android.nfc.tech.NfcB;
+import android.nfc.tech.NfcBarcode;
+import android.nfc.tech.NfcF;
+import android.nfc.tech.NfcV;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
@@ -48,6 +61,102 @@ public class Logo extends Activity {
     private int soundid;
     private String barcodeStr;
     private final static String SCAN_ACTION = "urovo.rcv.message";//扫描结束action
+
+    NfcAdapter nfcAdapter;
+
+
+    PendingIntent mPendingIntent;
+
+    public void registerReceiver() {
+        if (nfcAdapter != null) {
+            String[][] TECHLISTS = new String[][]{{IsoDep.class.getName()},
+                    {NfcV.class.getName()}, {NfcF.class.getName()}, {NfcA.class.getName()}
+                    , {NfcB.class.getName()}, {NdefFormatable.class.getName()},
+                    {NfcBarcode.class.getName()},
+                    {MifareClassic.class.getName()},
+                    {MifareUltralight.class.getName()}, {Ndef.class.getName()}};
+            IntentFilter[] mFilters = new IntentFilter[]{
+                    new IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED),
+                    new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED),
+                    new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED)};
+            mPendingIntent = PendingIntent.getActivity(this, 0,
+                    new Intent(this, this.getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+            try {
+                nfcAdapter.enableForegroundDispatch(this, mPendingIntent, null, null);
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    public void unregisterReceiver() {
+        if (nfcAdapter != null) {
+            try {
+                nfcAdapter.disableForegroundDispatch(this);
+            } catch (Exception e) {
+            }
+        }
+    }
+
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Tag tagFromIntent = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        String ndcid = "" ;//= ByteArrayToHexString(tagFromIntent.getId());
+
+        MifareClassic mfc = MifareClassic.get(tagFromIntent);
+
+        if (mfc == null)
+            return;
+        try {
+            mfc.connect();
+            Boolean auth = mfc.authenticateSectorWithKeyA(2,
+                    MifareClassic.KEY_DEFAULT);
+            if (auth)
+            {
+//                int bCount = mfc.getBlockCountInSector(2);
+                int bIndex = mfc.sectorToBlock(2);
+
+                byte[] data = mfc.readBlock(bIndex);
+                ndcid = new String(data);
+                for (int i = 0; i < ndcid.length(); i++) {
+                    if (ndcid.substring(i,i+1).equals("#"))
+                    {
+                        ndcid = ndcid.substring(0,i+1);
+                        break;
+                    }
+                }
+
+
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        if (editText1.isFocused()) {
+            editText1.setText(ndcid);
+            editText2.requestFocus();
+
+            return;
+        }
+        if (editText2.isFocused()) {
+            editText2.setText(ndcid);
+            onClickListenerlogin.onClick(loginbutton);
+
+            return;
+        }
+
+
+
+
+
+
+//        Toast.makeText(this,ndcid,Toast.LENGTH_SHORT).show();
+    }
 
 
     Thread thread;
@@ -142,6 +251,7 @@ public class Logo extends Activity {
         filter1.addAction(Common.SCAN_ACTION_DD);
         registerReceiver(mScanReceiver, filter);
         registerReceiver(mScanReceiverdd, filter1);
+        registerReceiver();
     }
 
 
@@ -152,6 +262,9 @@ public class Logo extends Activity {
         imageViewsetting = (ImageView) findViewById(R.id.setting);
         imageViewsetting.setOnClickListener(onClickListenersetting);
         editText1 = (EditText) findViewById(R.id.wordk1);
+
+        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+
 
         radioButton1 = (RadioButton) findViewById(R.id.dd);
         radioButton2 = (RadioButton) findViewById(R.id.idata);
@@ -253,6 +366,7 @@ public class Logo extends Activity {
 
         unregisterReceiver(mScanReceiver);
         unregisterReceiver(mScanReceiverdd);
+        unregisterReceiver();
     }
 
 

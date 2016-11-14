@@ -20,10 +20,12 @@ import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
 import android.nfc.tech.NfcA;
 import android.nfc.tech.NfcB;
+import android.nfc.tech.NfcBarcode;
 import android.nfc.tech.NfcF;
 import android.nfc.tech.NfcV;
 import android.os.Bundle;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -61,7 +63,7 @@ public class createtask extends Activity {
     Button buttonconfim;
 
     ListView listView;
-    List<Map<String,String>> mapList;
+    List<Map<String, String>> mapList;
     MyAdapter myAdapter;
 
     EditText projedtno;
@@ -69,16 +71,16 @@ public class createtask extends Activity {
     Button scan1;
     Button scan2;
 
-    String projectcode="";
-    String liftNo="";
+    String projectcode = "";
+    String liftNo = "";
 
     TextView title;
 
-    Map<String,String> selectmap=null;
+    Map<String, String> selectmap = null;
     AlertDialog alertDialog;
 
 
-    String tableindex ="1";
+    String tableindex = "1";
     String ProjectType = "";
 
     NfcAdapter nfcAdapter;
@@ -109,18 +111,16 @@ public class createtask extends Activity {
 
 //            barcodeStr = intent.getExtras().getString("data");
             barcodeStr = intent.getStringExtra("value");
-            if (projedtno.isFocused())
-            {
+            if (projedtno.isFocused()) {
                 projedtno.setText(barcodeStr);
                 onKeyListenerprojectno.onKey(projedtno, 0, new KeyEvent(KeyEvent.ACTION_UP, 66));
                 liftno.requestFocus();
 
                 return;
             }
-            if (liftno.isFocused())
-            {
+            if (liftno.isFocused()) {
                 liftno.setText(barcodeStr);
-                onKeyListenerliftno.onKey(liftno,0,new KeyEvent(KeyEvent.ACTION_UP,66));
+                onKeyListenerliftno.onKey(liftno, 0, new KeyEvent(KeyEvent.ACTION_UP, 66));
                 return;
             }
         }
@@ -146,18 +146,16 @@ public class createtask extends Activity {
 
             barcodeStr = intent.getExtras().getString("data");
 //            barcodeStr = intent.getStringExtra("value");
-            if (projedtno.isFocused())
-            {
+            if (projedtno.isFocused()) {
                 projedtno.setText(barcodeStr);
                 onKeyListenerprojectno.onKey(projedtno, 0, new KeyEvent(KeyEvent.ACTION_UP, 66));
                 liftno.requestFocus();
 
                 return;
             }
-            if (liftno.isFocused())
-            {
+            if (liftno.isFocused()) {
                 liftno.setText(barcodeStr);
-                onKeyListenerliftno.onKey(liftno,0,new KeyEvent(KeyEvent.ACTION_UP,66));
+                onKeyListenerliftno.onKey(liftno, 0, new KeyEvent(KeyEvent.ACTION_UP, 66));
                 return;
             }
         }
@@ -194,17 +192,16 @@ public class createtask extends Activity {
     }
 
 
-
-
     PendingIntent mPendingIntent;
 
     public void registerReceiver() {
         if (nfcAdapter != null) {
-            String[][] TECHLISTS = new String[][] { { IsoDep.class.getName() },
-                    { NfcV.class.getName() }, { NfcF.class.getName() },{ NfcA.class.getName() }
-                    ,{ NfcB.class.getName() },{ NdefFormatable.class.getName() },
-                    { MifareClassic.class.getName() },
-                    { MifareUltralight.class.getName() },{ Ndef.class.getName() }};
+            String[][] TECHLISTS = new String[][]{{IsoDep.class.getName()},
+                    {NfcV.class.getName()}, {NfcF.class.getName()}, {NfcA.class.getName()}
+                    , {NfcB.class.getName()}, {NdefFormatable.class.getName()},
+                    {NfcBarcode.class.getName()},
+                    {MifareClassic.class.getName()},
+                    {MifareUltralight.class.getName()}, {Ndef.class.getName()}};
             IntentFilter[] mFilters = new IntentFilter[]{
                     new IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED),
                     new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED),
@@ -212,7 +209,7 @@ public class createtask extends Activity {
             mPendingIntent = PendingIntent.getActivity(this, 0,
                     new Intent(this, this.getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
             try {
-                nfcAdapter.enableForegroundDispatch(this, mPendingIntent,  null, null);
+                nfcAdapter.enableForegroundDispatch(this, mPendingIntent, null, null);
             } catch (Exception e) {
             }
         }
@@ -223,9 +220,44 @@ public class createtask extends Activity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Tag tagFromIntent = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-        String ndcid= ByteArrayToHexString(tagFromIntent.getId());
+        String ndcid = "" ;//= ByteArrayToHexString(tagFromIntent.getId());
 
-        MifareClassic mfc =  MifareClassic.get(tagFromIntent);
+        MifareClassic mfc = MifareClassic.get(tagFromIntent);
+
+        if (mfc == null)
+            return;
+        try {
+            mfc.connect();
+            Boolean auth = mfc.authenticateSectorWithKeyA(2,
+                    MifareClassic.KEY_DEFAULT);
+            if (auth)
+            {
+//                int bCount = mfc.getBlockCountInSector(2);
+                int bIndex = mfc.sectorToBlock(2);
+
+                byte[] data = mfc.readBlock(bIndex);
+                ndcid = new String(data);
+
+                for (int i = 0; i < ndcid.length(); i++) {
+                    if (ndcid.substring(i,i+1).equals("#"))
+                    {
+                        ndcid = ndcid.substring(0,i+1);
+                        break;
+                    }
+
+
+                }
+
+
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
         //读取用户数据
         projedtno.setText(ndcid);
         onKeyListenerprojectno.onKey(projedtno, 0, new KeyEvent(KeyEvent.ACTION_UP, 66));
@@ -238,17 +270,22 @@ public class createtask extends Activity {
 
     String ByteArrayToHexString(byte[] inarray) {
         int i, j, in;
-        String[] hex = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A",
-                "B", "C", "D", "E", "F" };
+        String[] hex = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A",
+                "B", "C", "D", "E", "F"};
         String out = "";
+        String result = "";
         for (j = 0; j < inarray.length; ++j) {
             in = inarray[j] & 0xff;
             i = (in >> 4) & 0x0f;
-            out += hex[i];
+            out = hex[i];
             i = in & 0x0f;
-            out += hex[i];
+            out = hex[i];
+            if (out.equals("23"))
+                break;
+            result += Integer.parseInt(out);
+
         }
-        return out;
+        return result;
     }
 
 
@@ -262,44 +299,40 @@ public class createtask extends Activity {
     }
 
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_createtask);
 
 
-        listView = (ListView)findViewById(R.id.list1);
+        listView = (ListView) findViewById(R.id.list1);
         listView.setOnItemClickListener(onItemClickListener);
         spinner = (Spinner) findViewById(R.id.dttype);
-        projedtno = (EditText)findViewById(R.id.textprojectno);
-        liftno = (EditText)findViewById(R.id.textdiantinumber);
+        projedtno = (EditText) findViewById(R.id.textprojectno);
+        liftno = (EditText) findViewById(R.id.textdiantinumber);
         projedtno.setOnKeyListener(onKeyListenerprojectno);
         projedtno.setOnEditorActionListener(onEditorActionListenerprojectno);
         liftno.setOnKeyListener(onKeyListenerliftno);
 
-        buttondo=(Button)findViewById(R.id.buttondo);
+        buttondo = (Button) findViewById(R.id.buttondo);
         buttondo.setOnClickListener(onClickListenerbuttondo);
-        buttonclear=(Button)findViewById(R.id.buttonclear);
+        buttonclear = (Button) findViewById(R.id.buttonclear);
         buttonclear.setOnClickListener(onClickListenerbuttonclear);
-        buttonconfim=(Button)findViewById(R.id.buttonconfim);
+        buttonconfim = (Button) findViewById(R.id.buttonconfim);
         buttonconfim.setOnClickListener(onClickListenerbuttonconfim);
 
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
 
-
-        title=(TextView)findViewById(R.id.title);
-        scan1 = (Button)findViewById(R.id.scan1);
+        title = (TextView) findViewById(R.id.title);
+        scan1 = (Button) findViewById(R.id.scan1);
         scan1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(createtask.this,CaptureActivity.class);
-                Bundle bundle=new Bundle();
-                bundle.putInt("type",1);
+                Intent intent = new Intent(createtask.this, CaptureActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("type", 1);
                 intent.putExtras(bundle);
                 startActivityForResult(intent, 0);
                 overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
@@ -307,20 +340,20 @@ public class createtask extends Activity {
 
             }
         });
-        scan2 = (Button)findViewById(R.id.scan2);
+        scan2 = (Button) findViewById(R.id.scan2);
         scan2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(createtask.this,CaptureActivity.class);
-                Bundle bundle=new Bundle();
-                bundle.putInt("type",2);
+                Intent intent = new Intent(createtask.this, CaptureActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("type", 2);
                 intent.putExtras(bundle);
                 startActivityForResult(intent, 0);
                 overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 
             }
         });
-        String strtitle = String.format("工号：%1$s(%2$s)",Common.work1,Common.work1name);
+        String strtitle = String.format("工号：%1$s(%2$s)", Common.work1, Common.work1name);
         title.setText(strtitle);
 //        Alltype.add("请选择保养类型");
 //        Alltype.add("半月保养");
@@ -331,10 +364,9 @@ public class createtask extends Activity {
         Time time = new Time("GMT+8");
         time.setToNow();
 //        Calendar calendar ;
-        int day = time.monthDay+1;
-        int month =time.month+1;
-        switch (month)
-        {
+        int day = time.monthDay + 1;
+        int month = time.month + 1;
+        switch (month) {
             case 1:
             case 2:
             case 4:
@@ -350,8 +382,7 @@ public class createtask extends Activity {
             case 3:
             case 9:
 
-                if (day <= 15)
-                {
+                if (day <= 15) {
                     spinner.setSelection(1);
                     ProjectType = "△（半月保养项目）";
                     Alltype.add("半月保养");
@@ -363,8 +394,7 @@ public class createtask extends Activity {
                 break;
 
             case 6:
-                if (day <= 15)
-                {
+                if (day <= 15) {
                     spinner.setSelection(1);
                     ProjectType = "△（半月保养项目）";
                     Alltype.add("半月保养");
@@ -375,8 +405,7 @@ public class createtask extends Activity {
                 Alltype.add("半年保养");
                 break;
             case 12:
-                if (day <= 15)
-                {
+                if (day <= 15) {
                     spinner.setSelection(1);
                     ProjectType = "△（半月保养项目）";
                     Alltype.add("半月保养");
@@ -395,29 +424,23 @@ public class createtask extends Activity {
         spinner.setOnItemSelectedListener(onItemSelectedListenertype);
 
 
-
-
-
         mapList = new ArrayList<Map<String, String>>();
         myAdapter = new MyAdapter(this);
         listView.setAdapter(myAdapter);
 
-        if (!Common.projectcode.equals(""))
-        {
+        if (!Common.projectcode.equals("")) {
             projedtno.setText(Common.projectcode);
             projectcode = Common.projectcode;
             mapList = Common.BaseDB.Getprojectinfo(projectcode);
-            if (mapList == null)
-            {
-                Toast.makeText(createtask.this,"没有找到项目",Toast.LENGTH_SHORT).show();
+            if (mapList == null) {
+                Toast.makeText(createtask.this, "没有找到项目", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (mapList .size()==0)
-            {
-                Toast.makeText(createtask.this,"没有找到项目",Toast.LENGTH_SHORT).show();
+            if (mapList.size() == 0) {
+                Toast.makeText(createtask.this, "没有找到项目", Toast.LENGTH_SHORT).show();
                 return;
             }
-            MyAdapter myAdapter1 = (MyAdapter)listView.getAdapter();
+            MyAdapter myAdapter1 = (MyAdapter) listView.getAdapter();
             myAdapter1.notifyDataSetChanged();
         }
     }
@@ -426,62 +449,57 @@ public class createtask extends Activity {
     View.OnClickListener onClickListenerbuttondo = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (selectmap ==null)
-            {
+            if (selectmap == null) {
                 Toast.makeText(createtask.this,
-                        "请选择一个项目",Toast.LENGTH_SHORT).show();
-                return ;
+                        "请选择一个项目", Toast.LENGTH_SHORT).show();
+                return;
             }
 
-            if (selectmap.get("state").equals("3"))
-            {
+            if (selectmap.get("state").equals("3")) {
                 Toast.makeText(createtask.this,
-                        "该项目已经完成，不能再次执行",Toast.LENGTH_SHORT).show();
-                return ;
+                        "该项目已经完成，不能再次执行", Toast.LENGTH_SHORT).show();
+                return;
             }
 
             Intent intent;
             Bundle bundle;
 
-            intent =new Intent(createtask.this,ScanTask.class);
-            bundle =new Bundle();
-            bundle.putString("ProjectName",selectmap.get("ProjectName"));
-            bundle.putString("ContractNO",selectmap.get("ContractNO"));
-            bundle.putString("ProjectType",ProjectType );
-            bundle.putString("LiftType",selectmap.get("LiftType") );
-            bundle.putString("CheckDate",Common.GetSysTimeshort());
-            bundle.putString("EffectiveDate",selectmap.get("EffectiveDate") );
-            bundle.putString("ContractEffectiveDate",selectmap.get("ContractEffectiveDate") );
-            bundle.putString("ReachTime",Common.GetSysOnlyTime() );
-            bundle.putString("CheckPerson",Common.work1name + "," + Common.work2name );
-            bundle.putString("LiftNO",selectmap.get("LiftNO") );
-            bundle.putString("LiftNOTime",Common.GetSysOnlyTime() );
-            bundle.putString("FactoryNo",selectmap.get("FactoryNo") );
-            bundle.putString("RegisterNO",selectmap.get("RegisterNO") );
-            bundle.putString("ProjectCode",selectmap.get("ProjectCode") );
-            bundle.putString("LiftCode",selectmap.get("LiftCode") );
-            bundle.putString("pxid",selectmap.get("pxid") );
-            if (selectmap.get("LiftCode").substring(0,3).equals("L-A"))
+            intent = new Intent(createtask.this, ScanTask.class);
+            bundle = new Bundle();
+            bundle.putString("ProjectName", selectmap.get("ProjectName"));
+            bundle.putString("ContractNO", selectmap.get("ContractNO"));
+            bundle.putString("ProjectType", ProjectType);
+            bundle.putString("LiftType", selectmap.get("LiftType"));
+            bundle.putString("CheckDate", Common.GetSysTimeshort());
+            bundle.putString("EffectiveDate", selectmap.get("EffectiveDate"));
+            bundle.putString("ContractEffectiveDate", selectmap.get("ContractEffectiveDate"));
+            bundle.putString("ReachTime", Common.GetSysOnlyTime());
+            bundle.putString("CheckPerson", Common.work1name + "," + Common.work2name);
+            bundle.putString("LiftNO", selectmap.get("LiftNO"));
+            bundle.putString("LiftNOTime", Common.GetSysOnlyTime());
+            bundle.putString("FactoryNo", selectmap.get("FactoryNo"));
+            bundle.putString("RegisterNO", selectmap.get("RegisterNO"));
+            bundle.putString("ProjectCode", selectmap.get("ProjectCode"));
+            bundle.putString("LiftCode", selectmap.get("LiftCode"));
+            bundle.putString("pxid", selectmap.get("pxid"));
+            if (selectmap.get("LiftCode").substring(0, 3).equals("L-A"))
                 tableindex = "1";
-            if (selectmap.get("LiftCode").substring(0,3).equals("L-D"))
+            if (selectmap.get("LiftCode").substring(0, 3).equals("L-D"))
                 tableindex = "2";
-            if (selectmap.get("LiftCode").substring(0,3).equals("L-B"))
+            if (selectmap.get("LiftCode").substring(0, 3).equals("L-B"))
                 tableindex = "3";
-            if (selectmap.get("LiftCode").substring(0,3).equals("L-C"))
+            if (selectmap.get("LiftCode").substring(0, 3).equals("L-C"))
                 tableindex = "4";
-            if (spinner.getSelectedItemPosition() ==spinner.getCount()-1)
+            if (spinner.getSelectedItemPosition() == spinner.getCount() - 1)
                 tableindex = "5";
-
-
 
 
             if (selectmap.get("state").equals("1")) {
                 String tableindex2 = Common.mainDB.Gettabletype(
-                        selectmap.get("ContractNO"),selectmap.get("LiftNO"));
+                        selectmap.get("ContractNO"), selectmap.get("LiftNO"));
                 if (tableindex2.equals(""))
-                    tableindex2=tableindex;
-                else
-                {
+                    tableindex2 = tableindex;
+                else {
                     if (tableindex.equals("5") && !tableindex2.equals("5")) {
 //                        AlertDialog.Builder builder=new AlertDialog.Builder(createtask.this);
 //                        builder.setTitle("重要提示").setMessage("切换到应急保养后，将清除原来数据");
@@ -532,11 +550,10 @@ public class createtask extends Activity {
                     }
 
                 }
-                bundle.putString("TableType",tableindex2 );
-                if (tableindex2.equals("5") )
-                    intent =new Intent(createtask.this,yingji.class);
-            }
-            else {
+                bundle.putString("TableType", tableindex2);
+                if (tableindex2.equals("5"))
+                    intent = new Intent(createtask.this, yingji.class);
+            } else {
 //                if (spinner.getSelectedItemPosition() ==0)
 //                {
 //                    Toast.makeText(createtask.this,
@@ -544,50 +561,49 @@ public class createtask extends Activity {
 //                    return ;
 //                }
 
-                Common.mainDB.AddTask(selectmap.get("ContractNO"),selectmap.get("LiftNO"));
+                Common.mainDB.AddTask(selectmap.get("ContractNO"), selectmap.get("LiftNO"));
                 bundle.putString("TableType", tableindex);
-                if (tableindex.equals("5") )
-                    intent =new Intent(createtask.this,yingji.class);
+                if (tableindex.equals("5"))
+                    intent = new Intent(createtask.this, yingji.class);
             }
 
             intent.putExtras(bundle);
-            startActivityForResult(intent,1);
+            startActivityForResult(intent, 1);
 
 
-            overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
+            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 
-            return ;
+            return;
         }
     };
 
     View.OnClickListener onClickListenerbuttonclear = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (selectmap ==null)
-            {
+            if (selectmap == null) {
                 Toast.makeText(createtask.this,
-                        "请选择一个项目",Toast.LENGTH_SHORT).show();
-                return ;
+                        "请选择一个项目", Toast.LENGTH_SHORT).show();
+                return;
             }
 
             AlertDialog.Builder builder = new AlertDialog.Builder(createtask.this);
             builder.setTitle("提示");
             builder.setCancelable(true);
-            String note =String.format("项目名称：%1$s 电梯编号：%2$s 是否需要清除"
-                    ,selectmap.get("ProjectName"),selectmap.get("LiftNO"));
+            String note = String.format("项目名称：%1$s 电梯编号：%2$s 是否需要清除"
+                    , selectmap.get("ProjectName"), selectmap.get("LiftNO"));
             builder.setMessage(note);
-            builder.setPositiveButton("确认",new DialogInterface.OnClickListener() {
+            builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    Common.mainDB.DelTaskinfo(selectmap.get("ContractNO"),selectmap.get("LiftNO"));
+                    Common.mainDB.DelTaskinfo(selectmap.get("ContractNO"), selectmap.get("LiftNO"));
                     alertDialog.dismiss();
                     mapList = Common.BaseDB.Getprojectinfo(projectcode);
-                    MyAdapter myAdapter1 = (MyAdapter)listView.getAdapter();
+                    MyAdapter myAdapter1 = (MyAdapter) listView.getAdapter();
                     myAdapter1.notifyDataSetChanged();
 
                 }
             });
-            builder.setNegativeButton("取消",new DialogInterface.OnClickListener() {
+            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     alertDialog.dismiss();
@@ -602,11 +618,10 @@ public class createtask extends Activity {
     View.OnClickListener onClickListenerbuttonconfim = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (selectmap ==null)
-            {
+            if (selectmap == null) {
                 Toast.makeText(createtask.this,
-                        "没有项目",Toast.LENGTH_SHORT).show();
-                return ;
+                        "没有项目", Toast.LENGTH_SHORT).show();
+                return;
             }
 //                if (!selectmap.get("state"). equals("1")) {
 //                    Toast.makeText(createtask.this,
@@ -616,13 +631,13 @@ public class createtask extends Activity {
 
             Intent intent;
             Bundle bundle;
-            intent =new Intent(createtask.this,taskfinish.class);
-            bundle =new Bundle();
+            intent = new Intent(createtask.this, taskfinish.class);
+            bundle = new Bundle();
 
-            bundle.putString("ContractNO",selectmap.get("ContractNO"));
-            bundle.putString("pxid",selectmap.get("pxid"));
-            bundle.putString("LiftNO",selectmap.get("LiftNO"));
-            bundle.putString("khmc",selectmap.get("ProjectName"));
+            bundle.putString("ContractNO", selectmap.get("ContractNO"));
+            bundle.putString("pxid", selectmap.get("pxid"));
+            bundle.putString("LiftNO", selectmap.get("LiftNO"));
+            bundle.putString("khmc", selectmap.get("ProjectName"));
 //                bundle.putString("TableType",Common.mainDB.Gettabletype(
 //                selectmap.get("ContractNO"),selectmap.get("LiftNO")));
             String ContractNO = selectmap.get("ContractNO").replace("合同编号:", "");
@@ -630,125 +645,110 @@ public class createtask extends Activity {
 
             List<Map<String, String>> mapList1;
             mapList1 = Common.mainDB.GetTaskDetailinfo(ContractNO, LiftNO);
-            if (mapList1.size() == 0)
-            {
-                Toast.makeText(createtask.this,"没有保养记录，不能确认任务，或者请清除数据",Toast.LENGTH_SHORT).show();
+            if (mapList1.size() == 0) {
+                Toast.makeText(createtask.this, "没有保养记录，不能确认任务，或者请清除数据", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             if (!CheckWork(mapList1.get(0).get("ProjectType"),
-                    mapList1.get(0).get("TableType"),mapList1.size()))
-            {
-                Toast.makeText(createtask.this,"没有完成所有保养内容，不能完成任务",Toast.LENGTH_SHORT).show();
+                    mapList1.get(0).get("TableType"), mapList1.size())) {
+                Toast.makeText(createtask.this, "没有完成所有保养内容，不能完成任务", Toast.LENGTH_SHORT).show();
                 return;
             }
 
+            if (!Common.mainDB.checkimgcount(selectmap.get("ContractNO"),
+                    selectmap.get("LiftNO")))
+            {
+                Toast.makeText(createtask.this, "巡检照片必须达到3张以上", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+
             intent.putExtras(bundle);
-            startActivityForResult(intent,1);
-            overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
+            startActivityForResult(intent, 1);
+            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 
         }
     };
 
-    Boolean CheckWork(String projecttype,String tabletype,int count)
-    {
-       if (tabletype.equals("1"))
-       {
+    Boolean CheckWork(String projecttype, String tabletype, int count) {
+        if (tabletype.equals("1")) {
 
-           if (projecttype.equals("△（半月保养项目）"))
-           {
-               if (count <27 )
-                   return false;
-           }
-           if (projecttype.equals("△+■（季度保养项目）"))
-           {
-               if (count <39 )
-                   return false;
-           }
-           if (projecttype.equals("△+■+○（半年保养项目）"))
-           {
-               if (count <51 )
-                   return false;
-           }
-           if (projecttype.equals("△+■+○+★（全年保养项目）"))
-           {
-               if (count <66 )
-                   return false;
-           }
-           return true;
-       }
-        if (tabletype.equals("3"))
-        {
-
-            if (projecttype.equals("△（半月保养项目）"))
-            {
-                if (count <33 )
+            if (projecttype.equals("△（半月保养项目）")) {
+                if (count < 27)
                     return false;
             }
-            if (projecttype.equals("△+■（季度保养项目）"))
-            {
-                if (count <39 )
+            if (projecttype.equals("△+■（季度保养项目）")) {
+                if (count < 39)
                     return false;
             }
-            if (projecttype.equals("△+■+○（半年保养项目）"))
-            {
-                if (count <49 )
+            if (projecttype.equals("△+■+○（半年保养项目）")) {
+                if (count < 51)
                     return false;
             }
-            if (projecttype.equals("△+■+○+★（全年保养项目）"))
-            {
-                if (count <63 )
+            if (projecttype.equals("△+■+○+★（全年保养项目）")) {
+                if (count < 66)
                     return false;
             }
             return true;
         }
-        if (tabletype.equals("2"))
-        {
+        if (tabletype.equals("3")) {
 
-            if (projecttype.equals("△（半月保养项目）"))
-            {
-                if (count <18 )
+            if (projecttype.equals("△（半月保养项目）")) {
+                if (count < 33)
                     return false;
             }
-            if (projecttype.equals("△+■（季度保养项目）"))
-            {
-                if (count <27 )
+            if (projecttype.equals("△+■（季度保养项目）")) {
+                if (count < 39)
                     return false;
             }
-            if (projecttype.equals("△+■+○（半年保养项目）"))
-            {
-                if (count <36 )
+            if (projecttype.equals("△+■+○（半年保养项目）")) {
+                if (count < 49)
                     return false;
             }
-            if (projecttype.equals("△+■+○+★（全年保养项目）"))
-            {
-                if (count <51 )
+            if (projecttype.equals("△+■+○+★（全年保养项目）")) {
+                if (count < 63)
+                    return false;
+            }
+            return true;
+        }
+        if (tabletype.equals("2")) {
+
+            if (projecttype.equals("△（半月保养项目）")) {
+                if (count < 18)
+                    return false;
+            }
+            if (projecttype.equals("△+■（季度保养项目）")) {
+                if (count < 27)
+                    return false;
+            }
+            if (projecttype.equals("△+■+○（半年保养项目）")) {
+                if (count < 36)
+                    return false;
+            }
+            if (projecttype.equals("△+■+○+★（全年保养项目）")) {
+                if (count < 51)
                     return false;
             }
             return true;
         }
 
-        if (tabletype.equals("4"))
-        {
+        if (tabletype.equals("4")) {
 
-            if (projecttype.equals("△（半月保养项目）"))
-            {
-                if (count <30 )
+            if (projecttype.equals("△（半月保养项目）")) {
+                if (count < 30)
                     return false;
             }
-            if (projecttype.equals("△+■（季度保养项目）"))
-            {
-                if (count <42 )
+            if (projecttype.equals("△+■（季度保养项目）")) {
+                if (count < 42)
                     return false;
             }
-            if (projecttype.equals("△+■+○（半年保养项目）"))
-            {
-                if (count <51 )
+            if (projecttype.equals("△+■+○（半年保养项目）")) {
+                if (count < 51)
                     return false;
             }
-            if (projecttype.equals("△+■+○+★（全年保养项目）"))
-            {
-                if (count <65 )
+            if (projecttype.equals("△+■+○+★（全年保养项目）")) {
+                if (count < 65)
                     return false;
             }
             return true;
@@ -758,8 +758,7 @@ public class createtask extends Activity {
     }
 
 
-
-    AdapterView.OnItemClickListener onItemClickListener =new AdapterView.OnItemClickListener() {
+    AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
@@ -769,33 +768,29 @@ public class createtask extends Activity {
     };
 
 
-    TextView.OnEditorActionListener onEditorActionListenerprojectno =new TextView.OnEditorActionListener() {
+    TextView.OnEditorActionListener onEditorActionListenerprojectno = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-            if (i == EditorInfo.IME_ACTION_DONE)
-            {
-                projectcode  = projedtno.getText().toString();
-                if (projectcode.equals(""))
-                {
-                    Toast.makeText(createtask.this,"请扫描合同编号",Toast.LENGTH_SHORT).show();
+            if (i == EditorInfo.IME_ACTION_DONE) {
+                projectcode = projedtno.getText().toString();
+                if (projectcode.equals("")) {
+                    Toast.makeText(createtask.this, "请扫描合同编号", Toast.LENGTH_SHORT).show();
                     return false;
                 }
                 mapList.clear();
-                liftNo="";
+                liftNo = "";
                 mapList = Common.BaseDB.Getprojectinfo(projectcode);
-                if (mapList ==null)
-                {
-                    Toast.makeText(createtask.this,"没有找到项目",Toast.LENGTH_SHORT).show();
+                if (mapList == null) {
+                    Toast.makeText(createtask.this, "没有找到项目", Toast.LENGTH_SHORT).show();
                     return false;
                 }
-                if (mapList .size()==0)
-                {
-                    Toast.makeText(createtask.this,"没有找到项目",Toast.LENGTH_SHORT).show();
+                if (mapList.size() == 0) {
+                    Toast.makeText(createtask.this, "没有找到项目", Toast.LENGTH_SHORT).show();
                     return false;
                 }
                 Common.projectcode = projectcode;
 
-                MyAdapter myAdapter1 = (MyAdapter)listView.getAdapter();
+                MyAdapter myAdapter1 = (MyAdapter) listView.getAdapter();
                 myAdapter1.notifyDataSetChanged();
             }
 
@@ -807,28 +802,23 @@ public class createtask extends Activity {
         @Override
         public boolean onKey(View view, int i, KeyEvent keyEvent) {
 
-            if (keyEvent.getKeyCode()==66 && keyEvent.getAction() == KeyEvent.ACTION_UP)
-            {
+            if (keyEvent.getKeyCode() == 66 && keyEvent.getAction() == KeyEvent.ACTION_UP) {
                 liftNo = liftno.getText().toString();
-                if (liftNo.equals(""))
-                {
-                    Toast.makeText(createtask.this,"请扫描电梯编号",Toast.LENGTH_SHORT).show();
+                if (liftNo.equals("")) {
+                    Toast.makeText(createtask.this, "请扫描电梯编号", Toast.LENGTH_SHORT).show();
                     return false;
                 }
 
-                if (mapList == null)
-                {
-                    Toast.makeText(createtask.this,"请先扫描项目",Toast.LENGTH_SHORT).show();
+                if (mapList == null) {
+                    Toast.makeText(createtask.this, "请先扫描项目", Toast.LENGTH_SHORT).show();
                     return false;
                 }
 
-                for (int ii= 0;ii < mapList.size();ii++)
-                {
-                    if (mapList.get(ii).get("LiftCode").toString().equals(liftNo))
-                    {
+                for (int ii = 0; ii < mapList.size(); ii++) {
+                    if (mapList.get(ii).get("LiftCode").toString().equals(liftNo)) {
                         listView.setSelection(ii);
                         listView.smoothScrollToPosition(ii);
-                        MyAdapter myAdapter1 = (MyAdapter)listView.getAdapter();
+                        MyAdapter myAdapter1 = (MyAdapter) listView.getAdapter();
                         myAdapter1.notifyDataSetChanged();
                         return false;
                     }
@@ -848,30 +838,26 @@ public class createtask extends Activity {
         @Override
         public boolean onKey(View view, int i, KeyEvent keyEvent) {
 
-            if (keyEvent.getKeyCode()==66 && keyEvent.getAction() == KeyEvent.ACTION_UP)
-            {
-                projectcode  = projedtno.getText().toString();
-                if (projectcode.equals(""))
-                {
-                    Toast.makeText(createtask.this,"请扫描合同编号",Toast.LENGTH_SHORT).show();
+            if (keyEvent.getKeyCode() == 66 && keyEvent.getAction() == KeyEvent.ACTION_UP) {
+                projectcode = projedtno.getText().toString();
+                if (projectcode.equals("")) {
+                    Toast.makeText(createtask.this, "请扫描合同编号", Toast.LENGTH_SHORT).show();
                     return false;
                 }
                 mapList.clear();
-                liftNo="";
+                liftNo = "";
                 mapList = Common.BaseDB.Getprojectinfo(projectcode);
-                if (mapList ==null)
-                {
-                    Toast.makeText(createtask.this,"没有找到项目",Toast.LENGTH_SHORT).show();
+                if (mapList == null) {
+                    Toast.makeText(createtask.this, "没有找到项目", Toast.LENGTH_SHORT).show();
                     return false;
                 }
-                if (mapList .size()==0)
-                {
-                    Toast.makeText(createtask.this,"没有找到项目",Toast.LENGTH_SHORT).show();
+                if (mapList.size() == 0) {
+                    Toast.makeText(createtask.this, "没有找到项目", Toast.LENGTH_SHORT).show();
                     return false;
                 }
                 Common.projectcode = projectcode;
 
-                MyAdapter myAdapter1 = (MyAdapter)listView.getAdapter();
+                MyAdapter myAdapter1 = (MyAdapter) listView.getAdapter();
                 myAdapter1.notifyDataSetChanged();
             }
 
@@ -882,8 +868,7 @@ public class createtask extends Activity {
     AdapterView.OnItemSelectedListener onItemSelectedListenertype = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-            switch (i)
-            {
+            switch (i) {
                 case 1:
                     ProjectType = "△（半月保养项目）";
                     break;
@@ -898,7 +883,7 @@ public class createtask extends Activity {
                     break;
                 case 5:
                     ProjectType = "应急维修";
-                    tableindex="5";
+                    tableindex = "5";
                     break;
             }
         }
@@ -917,67 +902,54 @@ public class createtask extends Activity {
 //    }
 
 
-
-
-
-
-
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode==1) {
+        if (requestCode == 1) {
             mapList = Common.BaseDB.Getprojectinfo(projectcode);
             MyAdapter myAdapter1 = (MyAdapter) listView.getAdapter();
             myAdapter1.notifyDataSetChanged();
 
         }
 
-        if (requestCode==0)
-        {
+        if (requestCode == 0) {
             if (data == null)
                 return;
             String code = data.getExtras().getString("code");
             int type = data.getExtras().getInt("type");
-            if (type ==1) {
+            if (type == 1) {
                 projedtno.setText(code);
-                projectcode  = projedtno.getText().toString();
+                projectcode = projedtno.getText().toString();
 
                 mapList.clear();
-                liftNo="";
+                liftNo = "";
                 mapList = Common.BaseDB.Getprojectinfo(projectcode);
-                if (mapList == null)
-                {
-                    Toast.makeText(createtask.this,"没有找到项目",Toast.LENGTH_SHORT).show();
+                if (mapList == null) {
+                    Toast.makeText(createtask.this, "没有找到项目", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (mapList .size()==0)
-                {
-                    Toast.makeText(createtask.this,"没有找到项目",Toast.LENGTH_SHORT).show();
+                if (mapList.size() == 0) {
+                    Toast.makeText(createtask.this, "没有找到项目", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
 
 
                 Common.projectcode = projectcode;
-                MyAdapter myAdapter1 = (MyAdapter)listView.getAdapter();
+                MyAdapter myAdapter1 = (MyAdapter) listView.getAdapter();
                 myAdapter1.notifyDataSetChanged();
             }
-            if (type ==2) {
+            if (type == 2) {
                 liftno.setText(code);
                 liftNo = liftno.getText().toString();
 
-                MyAdapter myAdapter1 = (MyAdapter)listView.getAdapter();
+                MyAdapter myAdapter1 = (MyAdapter) listView.getAdapter();
                 myAdapter1.notifyDataSetChanged();
 
             }
 
 
         }
-
-
 
 
     }
@@ -1181,7 +1153,7 @@ public class createtask extends Activity {
 
             projectname.setText(mapList.get(i).get("ProjectName"));
             projectno.setText("合同编号：" + mapList.get(i).get("ContractNO"));
-            liftno.setText("电梯编号：" +mapList.get(i).get("LiftNO"));
+            liftno.setText("电梯编号：" + mapList.get(i).get("LiftNO"));
 
             if (mapList.get(i).get("state").equals("0"))
                 state.setText("任务状态：未检查");
@@ -1190,8 +1162,7 @@ public class createtask extends Activity {
             if (mapList.get(i).get("state").equals("3"))
                 state.setText("任务状态：未发送");
 
-            if (!liftNo.equals("") && liftNo.equals(mapList.get(i).get("LiftCode")))
-            {
+            if (!liftNo.equals("") && liftNo.equals(mapList.get(i).get("LiftCode"))) {
 
                 projectname.setTextColor(getResources().getColor(R.color.red1));
                 liftno.setTextColor(getResources().getColor(R.color.firebrick));
@@ -1200,9 +1171,7 @@ public class createtask extends Activity {
                 listView.smoothScrollToPosition(i);
                 listView.setSelection(i);
                 selectmap = mapList.get(i);
-            }
-            else
-            {
+            } else {
                 projectname.setTextColor(getResources().getColor(R.color.blue));
                 liftno.setTextColor(getResources().getColor(R.color.mediumslateblue));
                 projectno.setTextColor(getResources().getColor(R.color.mediumslateblue));
