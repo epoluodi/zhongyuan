@@ -124,6 +124,7 @@ public class Logo extends Activity {
                     if (ndcid.substring(i,i+1).equals("#"))
                     {
                         ndcid = ndcid.substring(0,i+1);
+
                         break;
                     }
                 }
@@ -155,7 +156,7 @@ public class Logo extends Activity {
 
 
 
-//        Toast.makeText(this,ndcid,Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,ndcid,Toast.LENGTH_SHORT).show();
     }
 
 
