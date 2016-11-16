@@ -241,7 +241,7 @@ public class createtask extends Activity {
                 for (int i = 0; i < ndcid.length(); i++) {
                     if (ndcid.substring(i,i+1).equals("#"))
                     {
-                        ndcid = ndcid.substring(0,i+1);
+                        ndcid = ndcid.substring(0,i);
                         break;
                     }
 
@@ -656,12 +656,7 @@ public class createtask extends Activity {
                 return;
             }
 
-            if (!Common.mainDB.checkimgcount(selectmap.get("ContractNO"),
-                    selectmap.get("LiftNO")))
-            {
-                Toast.makeText(createtask.this, "巡检照片必须达到3张以上", Toast.LENGTH_SHORT).show();
-                return;
-            }
+
 
 
             intent.putExtras(bundle);

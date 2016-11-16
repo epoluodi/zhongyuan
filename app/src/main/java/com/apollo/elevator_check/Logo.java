@@ -123,7 +123,7 @@ public class Logo extends Activity {
                 for (int i = 0; i < ndcid.length(); i++) {
                     if (ndcid.substring(i,i+1).equals("#"))
                     {
-                        ndcid = ndcid.substring(0,i+1);
+                        ndcid = ndcid.substring(0,i);
 
                         break;
                     }
