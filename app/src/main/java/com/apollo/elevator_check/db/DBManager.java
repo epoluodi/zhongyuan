@@ -509,7 +509,25 @@ public class DBManager {
 
 
 
+    public Boolean checkimgcount(String ContractNO,String liftno)
+    {
+        try {
+            Cursor cursor = db.rawQuery("select * from photoinfo where ContractNO = ? and LiftNO= ? ",
+                    new String[]{ContractNO,liftno});
 
+            Boolean r;
+            if (cursor.getCount() <3)
+                r=  false;
+            else
+                r= true;
+            cursor.close();
+            return r;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     public void updateprojectinfostate(ScanData scandata)
     {

@@ -75,6 +75,11 @@ public class uploaddata extends Activity {
                 Common.CLosePopwindow();
                 break;
                 case 1:
+                    Common.CLosePopwindow();
+                    Toast.makeText(uploaddata.this, "数据上传成功，准备开始上传照片", Toast.LENGTH_SHORT).show();
+                    onClickListeneruploadphoto.onClick(uploadphotodatabutton);
+                    break;
+                case 2:
                     Toast.makeText(uploaddata.this, "上传成功", Toast.LENGTH_SHORT).show();
                     Common.CLosePopwindow();
                     mapList = Common.mainDB.GetuploadData();
@@ -423,7 +428,7 @@ public class uploaddata extends Activity {
 
 
                         }
-                        handler.sendEmptyMessage(1);
+                        handler.sendEmptyMessage(2);
                     }
                 }).start();
 

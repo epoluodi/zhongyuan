@@ -98,12 +98,11 @@ public class Logo extends Activity {
     }
 
 
-
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Tag tagFromIntent = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-        String ndcid = "" ;//= ByteArrayToHexString(tagFromIntent.getId());
+        String ndcid = "";//= ByteArrayToHexString(tagFromIntent.getId());
 
         MifareClassic mfc = MifareClassic.get(tagFromIntent);
 
@@ -113,17 +112,15 @@ public class Logo extends Activity {
             mfc.connect();
             Boolean auth = mfc.authenticateSectorWithKeyA(2,
                     MifareClassic.KEY_DEFAULT);
-            if (auth)
-            {
+            if (auth) {
 //                int bCount = mfc.getBlockCountInSector(2);
                 int bIndex = mfc.sectorToBlock(2);
 
                 byte[] data = mfc.readBlock(bIndex);
                 ndcid = new String(data);
                 for (int i = 0; i < ndcid.length(); i++) {
-                    if (ndcid.substring(i,i+1).equals("#"))
-                    {
-                        ndcid = ndcid.substring(0,i);
+                    if (ndcid.substring(i, i + 1).equals("#")) {
+                        ndcid = ndcid.substring(0, i);
 
                         break;
                     }
@@ -152,11 +149,7 @@ public class Logo extends Activity {
         }
 
 
-
-
-
-
-        Toast.makeText(this,ndcid,Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, ndcid, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -339,10 +332,12 @@ public class Logo extends Activity {
         }
 
         boolean isfirst = CheckDbfile();
+//        editText2.setFocusableInTouchMode(false);
+//        editText1.setFocusableInTouchMode(false);
         if (isfirst == false)
             Common.CopyDb(Logo.this);
 
-//        initidatascan();
+        initidatascan();
 
     }
 

@@ -314,58 +314,61 @@ public class ScanTask extends Activity {
             if (resultCode == -1) {
 
                 try {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Map<String, String> map;
-                            String base64img = "";
+                    Common.mainDB.Addprojectinfophoto(scandata, photofilename);
 
 
-                            PropertyInfo[] propertyInfos;
-                            PropertyInfo propertyInfo;
-
-                            JSONObject jsonObject = new JSONObject();
-                            try {
-                                jsonObject.put("projectcode", scandata.ProjectCode);
-                                jsonObject.put("liftno", scandata.LiftNO);
-                                jsonObject.put("liftcode", scandata.LiftCode);
-                                jsonObject.put("projectname", scandata.ProjectName);
-                                jsonObject.put("contractno", scandata.ContractNO);
-                                jsonObject.put("scancode", "");
-                                jsonObject.put("scanname", "");
-                                base64img = imgToBase64(photofilename);
-
-                                propertyInfos = new PropertyInfo[2];
-                                propertyInfo = new PropertyInfo();
-                                propertyInfo.setName("json");
-                                propertyInfo.setValue(jsonObject.toString());
-                                propertyInfos[0] = propertyInfo;
-                                propertyInfo = new PropertyInfo();
-                                propertyInfo.setName("imgbase64");
-                                propertyInfo.setValue(base64img);
-                                propertyInfos[1] = propertyInfo;
-
-
-                                Webservice webservice = new Webservice(Common.ServerWCF, 10000);
-                                String r = webservice.PDA_GetInterFaceForStringNew(propertyInfos, "A_PDA_submitphoto");
-                                if (r.equals("0") || r.equals("-1")) {
-                                    Common.mainDB.Addprojectinfophoto(scandata, photofilename);
-
-                                    return;
-                                }
-
-
-                                File file = new File(photofilename);
-                                file.delete();
-
-
-                            } catch (JSONException jsex) {
-
-                            }
-
-
-                        }
-                    }).start();
+//                    new Thread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Map<String, String> map;
+//                            String base64img = "";
+//
+//
+//                            PropertyInfo[] propertyInfos;
+//                            PropertyInfo propertyInfo;
+//
+//                            JSONObject jsonObject = new JSONObject();
+//                            try {
+//                                jsonObject.put("projectcode", scandata.ProjectCode);
+//                                jsonObject.put("liftno", scandata.LiftNO);
+//                                jsonObject.put("liftcode", scandata.LiftCode);
+//                                jsonObject.put("projectname", scandata.ProjectName);
+//                                jsonObject.put("contractno", scandata.ContractNO);
+//                                jsonObject.put("scancode", "");
+//                                jsonObject.put("scanname", "");
+//                                base64img = imgToBase64(photofilename);
+//
+//                                propertyInfos = new PropertyInfo[2];
+//                                propertyInfo = new PropertyInfo();
+//                                propertyInfo.setName("json");
+//                                propertyInfo.setValue(jsonObject.toString());
+//                                propertyInfos[0] = propertyInfo;
+//                                propertyInfo = new PropertyInfo();
+//                                propertyInfo.setName("imgbase64");
+//                                propertyInfo.setValue(base64img);
+//                                propertyInfos[1] = propertyInfo;
+//
+//
+//                                Webservice webservice = new Webservice(Common.ServerWCF, 10000);
+//                                String r = webservice.PDA_GetInterFaceForStringNew(propertyInfos, "A_PDA_submitphoto");
+//                                if (r.equals("0") || r.equals("-1")) {
+//                                    Common.mainDB.Addprojectinfophoto(scandata, photofilename);
+//
+//                                    return;
+//                                }
+//
+//
+//                                File file = new File(photofilename);
+//                                file.delete();
+//
+//
+//                            } catch (JSONException jsex) {
+//
+//                            }
+//
+//
+//                        }
+//                    }).start();
 
 
                 } catch (Exception e) {
@@ -473,8 +476,8 @@ public class ScanTask extends Activity {
                 scandata.ScanInfo = iteminfo;
                 scandata.ScanTime = Common.GetSysOnlyTime();
 
-                Common.mainDB.Addprojectinfo(scandata);
 
+                Common.mainDB.Addprojectinfo(scandata);
 
             }
 

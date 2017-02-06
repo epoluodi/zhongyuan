@@ -42,7 +42,7 @@
         android:background="@drawable/edittext_style"
         android:drawableLeft="@drawable/work1"
 
-        android:inputType="numberDecimal"
+
         android:singleLine="true"
         android:textSize="24dp"
 
@@ -61,7 +61,7 @@
 
         android:background="@drawable/edittext_style"
         android:drawableLeft="@drawable/work2"
-        android:inputType="numberDecimal"
+
         android:singleLine="true"
         android:textSize="24dp"
 

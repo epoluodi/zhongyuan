@@ -163,7 +163,7 @@ public class setting extends Activity {
         @Override
         public void onClick(View view) {
             Common.ShowPopWindow(getCurrentFocus(),getLayoutInflater(),"正在更新");
-            String updateurl = String.format("http://%1$s:8091/UpdateApp/dd_zhongyuan.apk",Common.ServerIP);
+            String updateurl = String.format("http://%1$s:8091/UpdateApp/zhongyuan.apk",Common.ServerIP);
             downloadCompleteReceiver = new DownloadCompleteReceiver();
             DownloadServer downloadServer = new DownloadServer(getApplicationContext(), downloadCompleteReceiver);
 

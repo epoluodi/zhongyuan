@@ -310,6 +310,8 @@ public class createtask extends Activity {
         spinner = (Spinner) findViewById(R.id.dttype);
         projedtno = (EditText) findViewById(R.id.textprojectno);
         liftno = (EditText) findViewById(R.id.textdiantinumber);
+//        projedtno.setFocusableInTouchMode(false);
+//        liftno.setFocusableInTouchMode(false);
         projedtno.setOnKeyListener(onKeyListenerprojectno);
         projedtno.setOnEditorActionListener(onEditorActionListenerprojectno);
         liftno.setOnKeyListener(onKeyListenerliftno);
@@ -656,7 +658,12 @@ public class createtask extends Activity {
                 return;
             }
 
-
+            if (!Common.mainDB.checkimgcount(selectmap.get("ContractNO"),
+                    selectmap.get("LiftNO")))
+            {
+                Toast.makeText(createtask.this, "巡检照片必须达到3张以上", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
 
             intent.putExtras(bundle);
@@ -895,6 +902,11 @@ public class createtask extends Activity {
 ////        getMenuInflater().inflate(R.menu.createtask, menu);
 //        return false;
 //    }
+
+
+
+
+
 
 
     @Override

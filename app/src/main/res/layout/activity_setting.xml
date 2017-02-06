@@ -23,12 +23,12 @@
         android:layout_height="50dp"
         android:background="@drawable/edittext_style"
         android:layout_below="@+id/t1"
-        android:hint="地址：218.91.156.62"
+        android:hint="地址：vc1818.88ip.org"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
         android:textSize="22dp"
         android:id="@+id/textserver"
-        android:text="218.91.156.62"
+        android:text="vc1818.88ip.org"
         />
 
 
