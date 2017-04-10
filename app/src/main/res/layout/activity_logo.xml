@@ -43,6 +43,7 @@
         android:drawableLeft="@drawable/work1"
 
 
+
         android:singleLine="true"
         android:textSize="24dp"
 
@@ -51,6 +52,7 @@
         />
 
     <EditText
+
         android:id="@+id/wordk2"
         android:layout_width="300dp"
         android:layout_height="50dp"

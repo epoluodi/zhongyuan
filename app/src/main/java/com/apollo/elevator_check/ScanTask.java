@@ -478,6 +478,8 @@ public class ScanTask extends Activity {
 
 
                 Common.mainDB.Addprojectinfo(scandata);
+                scancode.selectAll();
+                scancode.requestFocus();
 
             }
 

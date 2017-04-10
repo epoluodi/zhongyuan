@@ -24,6 +24,8 @@ import android.nfc.tech.NfcBarcode;
 import android.nfc.tech.NfcF;
 import android.nfc.tech.NfcV;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -44,6 +46,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.apollo.elevator_check.Common.Common;
+import com.apollo.elevator_check.WebService.GPS_Server;
+import com.apollo.elevator_check.WebService.Webservice;
+import com.baidu.location.BDLocation;
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.utils.DistanceUtil;
+
+import org.json.JSONObject;
+import org.ksoap2.serialization.PropertyInfo;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -85,6 +95,8 @@ public class createtask extends Activity {
 
     NfcAdapter nfcAdapter;
 
+    private GPS_Server gps_server;
+    private BDLocation bdLocation;
 
     private boolean isScaning = false;
     private SoundPool soundpool = null;
@@ -92,6 +104,8 @@ public class createtask extends Activity {
     private String barcodeStr;
     private final static String SCAN_ACTION = "urovo.rcv.message";//扫描结束action
 
+    private boolean isEScan = false;
+    private LatLng latLng1, latLng2;
 
     private BroadcastReceiver mScanReceiver = new BroadcastReceiver() {
 
@@ -111,6 +125,7 @@ public class createtask extends Activity {
 
 //            barcodeStr = intent.getExtras().getString("data");
             barcodeStr = intent.getStringExtra("value");
+            isEScan = false;
             if (projedtno.isFocused()) {
                 projedtno.setText(barcodeStr);
                 onKeyListenerprojectno.onKey(projedtno, 0, new KeyEvent(KeyEvent.ACTION_UP, 66));
@@ -145,6 +160,7 @@ public class createtask extends Activity {
 //            barcodeStr = new String(barcode, 0, barocodelen);
 
             barcodeStr = intent.getExtras().getString("data");
+            isEScan = false;
 //            barcodeStr = intent.getStringExtra("value");
             if (projedtno.isFocused()) {
                 projedtno.setText(barcodeStr);
@@ -167,10 +183,11 @@ public class createtask extends Activity {
     protected void onPause() {
         // TODO Auto-generated method stub
         super.onPause();
-
+        gps_server.StopLocation();
         unregisterReceiver(mScanReceiver);
         unregisterReceiver(mScanReceiverDD);
         unregisterReceiver();
+
     }
 
 
@@ -179,6 +196,7 @@ public class createtask extends Activity {
         // TODO Auto-generated method stub
         super.onResume();
 //        initScan();
+        gps_server.StartLocation();
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Common.SCAN_ACTION);
@@ -220,7 +238,7 @@ public class createtask extends Activity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Tag tagFromIntent = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-        String ndcid = "" ;//= ByteArrayToHexString(tagFromIntent.getId());
+        String ndcid = "";//= ByteArrayToHexString(tagFromIntent.getId());
 
         MifareClassic mfc = MifareClassic.get(tagFromIntent);
 
@@ -230,8 +248,7 @@ public class createtask extends Activity {
             mfc.connect();
             Boolean auth = mfc.authenticateSectorWithKeyA(2,
                     MifareClassic.KEY_DEFAULT);
-            if (auth)
-            {
+            if (auth) {
 //                int bCount = mfc.getBlockCountInSector(2);
                 int bIndex = mfc.sectorToBlock(2);
 
@@ -239,9 +256,8 @@ public class createtask extends Activity {
                 ndcid = new String(data);
 
                 for (int i = 0; i < ndcid.length(); i++) {
-                    if (ndcid.substring(i,i+1).equals("#"))
-                    {
-                        ndcid = ndcid.substring(0,i);
+                    if (ndcid.substring(i, i + 1).equals("#")) {
+                        ndcid = ndcid.substring(0, i);
                         break;
                     }
 
@@ -257,7 +273,7 @@ public class createtask extends Activity {
         }
 
 
-
+        isEScan = true;
         //读取用户数据
         projedtno.setText(ndcid);
         onKeyListenerprojectno.onKey(projedtno, 0, new KeyEvent(KeyEvent.ACTION_UP, 66));
@@ -299,11 +315,23 @@ public class createtask extends Activity {
     }
 
 
+    GPS_Server.GPSCallBack gpsCallBack = new GPS_Server.GPSCallBack() {
+        @Override
+        public void UpdateGpsLocation(BDLocation location) {
+            bdLocation = location;
+            latLng1 = new LatLng(location.getLatitude(), location.getLongitude());
+
+//            double distance  =  DistanceUtil.getDistance();
+
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_createtask);
 
+        gps_server = new GPS_Server(getApplicationContext(), gpsCallBack);
 
         listView = (ListView) findViewById(R.id.list1);
         listView.setOnItemClickListener(onItemClickListener);
@@ -451,6 +479,17 @@ public class createtask extends Activity {
     View.OnClickListener onClickListenerbuttondo = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+
+            if (!isEScan)
+            {
+                double distance  =  DistanceUtil.getDistance(latLng1,latLng2);
+                Log.i("距离",String.valueOf(distance));
+                if (distance>400) {
+                    Toast.makeText(createtask.this,"你得距离离目标较远，请确认是否在客户范围内",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
             if (selectmap == null) {
                 Toast.makeText(createtask.this,
                         "请选择一个项目", Toast.LENGTH_SHORT).show();
@@ -659,8 +698,7 @@ public class createtask extends Activity {
             }
 
             if (!Common.mainDB.checkimgcount(selectmap.get("ContractNO"),
-                    selectmap.get("LiftNO")))
-            {
+                    selectmap.get("LiftNO")) && !mapList1.get(0).get("TableType").equals("5")) {
                 Toast.makeText(createtask.this, "巡检照片必须达到3张以上", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -859,6 +897,37 @@ public class createtask extends Activity {
                 }
                 Common.projectcode = projectcode;
 
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        PropertyInfo[] propertyInfos = new PropertyInfo[1];
+                        PropertyInfo propertyInfo = new PropertyInfo();
+                        propertyInfo.setName("pxid");
+                        propertyInfo.setValue(mapList.get(0).get("pxid"));
+                        propertyInfos[0] = propertyInfo;
+                        Webservice webservice = new Webservice(Common.ServerWCF, 10000);
+                        String r = webservice.PDA_GetInterFaceForStringNew(propertyInfos, "A_PDA_getGps");
+                        if (r.equals("0") || r.equals("-1")) {
+                            latLng2 = null;
+                            return;
+//                            handler.sendEmptyMessage(0);
+                        }
+
+                        try {
+                            JSONObject jsonObject = new JSONObject(r);
+                            latLng2 = new LatLng(Double.valueOf(jsonObject.getString("lat")),
+                                    Double.valueOf(jsonObject.getString("lng")));
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                }).start();
+
+
                 MyAdapter myAdapter1 = (MyAdapter) listView.getAdapter();
                 myAdapter1.notifyDataSetChanged();
             }
@@ -866,6 +935,7 @@ public class createtask extends Activity {
             return false;
         }
     };
+
 
     AdapterView.OnItemSelectedListener onItemSelectedListenertype = new AdapterView.OnItemSelectedListener() {
         @Override
@@ -902,11 +972,6 @@ public class createtask extends Activity {
 ////        getMenuInflater().inflate(R.menu.createtask, menu);
 //        return false;
 //    }
-
-
-
-
-
 
 
     @Override

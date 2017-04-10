@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.baidu.mapapi.SDKInitializer;
+
 
 public class main extends Activity {
 
@@ -13,6 +15,7 @@ public class main extends Activity {
     Button button2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+//        SDKInitializer.initialize(getApplicationContext());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         button1 =(Button)findViewById(R.id.work);

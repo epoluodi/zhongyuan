@@ -69,6 +69,7 @@ public class uploaddata extends Activity {
             {
                 case 3:
                     Toast.makeText(uploaddata.this, msg.obj.toString(), Toast.LENGTH_SHORT).show();
+                    simpleAdapter.notifyDataSetChanged();
                     break;
                 case 0:
                 Toast.makeText(uploaddata.this, "上传失败", Toast.LENGTH_SHORT).show();
