@@ -228,6 +228,8 @@ public class Logo extends Activity {
 
                 return;
             }
+
+
         }
 
     };

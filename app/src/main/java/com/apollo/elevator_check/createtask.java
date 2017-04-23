@@ -47,8 +47,11 @@ import android.widget.Toast;
 
 import com.apollo.elevator_check.Common.Common;
 import com.apollo.elevator_check.WebService.GPS_Server;
+import com.apollo.elevator_check.WebService.IcallBackWebReponse;
+import com.apollo.elevator_check.WebService.WebThreadDo;
 import com.apollo.elevator_check.WebService.Webservice;
 import com.baidu.location.BDLocation;
+import com.baidu.mapapi.map.WearMapView;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
 
@@ -96,7 +99,7 @@ public class createtask extends Activity {
     NfcAdapter nfcAdapter;
 
     private GPS_Server gps_server;
-    private BDLocation bdLocation;
+
 
     private boolean isScaning = false;
     private SoundPool soundpool = null;
@@ -105,7 +108,7 @@ public class createtask extends Activity {
     private final static String SCAN_ACTION = "urovo.rcv.message";//扫描结束action
 
     private boolean isEScan = false;
-    private LatLng latLng1, latLng2;
+    private LatLng latLng1 = null, latLng2 = null;
 
     private BroadcastReceiver mScanReceiver = new BroadcastReceiver() {
 
@@ -318,7 +321,7 @@ public class createtask extends Activity {
     GPS_Server.GPSCallBack gpsCallBack = new GPS_Server.GPSCallBack() {
         @Override
         public void UpdateGpsLocation(BDLocation location) {
-            bdLocation = location;
+
             latLng1 = new LatLng(location.getLatitude(), location.getLongitude());
 
 //            double distance  =  DistanceUtil.getDistance();
@@ -482,12 +485,30 @@ public class createtask extends Activity {
 
             if (!isEScan)
             {
-                double distance  =  DistanceUtil.getDistance(latLng1,latLng2);
-                Log.i("距离",String.valueOf(distance));
-                if (distance>400) {
-                    Toast.makeText(createtask.this,"你得距离离目标较远，请确认是否在客户范围内",Toast.LENGTH_SHORT).show();
-                    return;
+
+
+                if (latLng2 != null)
+                {
+                    if (latLng1==null)
+                    {
+                        Toast.makeText(createtask.this,"当前位置信息没有获得请重新点击执行任务",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    double distance  =  DistanceUtil.getDistance(latLng1,latLng2);
+                    String s = String.format("距离 %1$s\n",String.valueOf(distance));
+                    s += String.format("位置1 %1$s-%2$s\n",String.valueOf(latLng1.latitude),
+                            String.valueOf(latLng1.longitude));
+                    s += String.format("位置2 %1$s-%2$s\n",String.valueOf(latLng2.latitude),
+                            String.valueOf(latLng2.longitude));
+                    Toast.makeText(createtask.this,s,Toast.LENGTH_LONG).show();
+                    Log.i("距离",String.valueOf(distance));
+                    if (distance>400) {
+                        Toast.makeText(createtask.this,"你得距离离目标较远，请确认是否在客户范围内",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                 }
+
+
             }
 
             if (selectmap == null) {
@@ -898,17 +919,20 @@ public class createtask extends Activity {
                 Common.projectcode = projectcode;
 
 
-                new Thread(new Runnable() {
+                PropertyInfo[] propertyInfos = new PropertyInfo[1];
+                PropertyInfo propertyInfo = new PropertyInfo();
+                propertyInfo.setName("pxid");
+                propertyInfo.setValue(mapList.get(0).get("pxid"));
+                propertyInfos[0] = propertyInfo;
+
+                WebThreadDo webThreadDo=new WebThreadDo(propertyInfos,"A_PDA_getGps");
+                webThreadDo.setIcallBackWebReponse(new IcallBackWebReponse() {
                     @Override
-                    public void run() {
-                        PropertyInfo[] propertyInfos = new PropertyInfo[1];
-                        PropertyInfo propertyInfo = new PropertyInfo();
-                        propertyInfo.setName("pxid");
-                        propertyInfo.setValue(mapList.get(0).get("pxid"));
-                        propertyInfos[0] = propertyInfo;
-                        Webservice webservice = new Webservice(Common.ServerWCF, 10000);
-                        String r = webservice.PDA_GetInterFaceForStringNew(propertyInfos, "A_PDA_getGps");
+                    public void setCallBackWebreponseXML(Message msg) {
+                        Common.CLosePopwindow();
+                        String r = msg.obj.toString();
                         if (r.equals("0") || r.equals("-1")) {
+                            Toast.makeText(createtask.this,"无法获得位置信息，请重新扫描项目",Toast.LENGTH_SHORT).show();
                             latLng2 = null;
                             return;
 //                            handler.sendEmptyMessage(0);
@@ -922,14 +946,30 @@ public class createtask extends Activity {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-
-
+                        MyAdapter myAdapter1 = (MyAdapter) listView.getAdapter();
+                        myAdapter1.notifyDataSetChanged();
                     }
-                }).start();
+                });
+                Common.ShowPopWindow(listView,getLayoutInflater(),"正在获取位置信息");
+                webThreadDo.requstWebinterfaceForString(true);
+//                Webservice webservice = new Webservice(Common.ServerWCF, 10000);
+//                String r = webservice.PDA_GetInterFaceForStringNew(propertyInfos, "A_PDA_getGps");
+//
 
 
-                MyAdapter myAdapter1 = (MyAdapter) listView.getAdapter();
-                myAdapter1.notifyDataSetChanged();
+
+
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//
+//
+//
+//                    }
+//                }).start();
+
+
+
             }
 
             return false;
