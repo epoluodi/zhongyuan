@@ -907,6 +907,13 @@ public class createtask extends Activity {
                 }
                 mapList.clear();
                 liftNo = "";
+                Log.i("projectcode",projectcode);
+
+                if (projectcode==null)
+                {
+                    Toast.makeText(createtask.this, "扫描失败，重新扫描", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
                 mapList = Common.BaseDB.Getprojectinfo(projectcode);
                 if (mapList == null) {
                     Toast.makeText(createtask.this, "没有找到项目", Toast.LENGTH_SHORT).show();

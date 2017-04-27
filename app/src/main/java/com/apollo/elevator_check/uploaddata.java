@@ -139,6 +139,12 @@ public class uploaddata extends Activity {
                         List<Map<String, String>> mapList1;
                         String ContractNO;
                         String LiftNO;
+                        String projectname = "";
+                        String lifttype ="";
+                        String checkdate="";
+                        String leavetime="";
+                        String CheckPerson="";
+                        String tabletype="";
                         PropertyInfo[] propertyInfos;
                         PropertyInfo propertyInfo;
                         String signfile="",pxid="";
@@ -148,7 +154,9 @@ public class uploaddata extends Activity {
                             map = mapList.get(i);
                             ContractNO = map.get("ContractNO").replace("合同编号:", "");
                             LiftNO = map.get("LiftNO").replace("电梯编号:", "");
+
                             mapList1 = Common.mainDB.GetTaskDetailinfo(ContractNO, LiftNO);
+
 
 
                             for (int ii = 0; ii < mapList1.size(); ii++) {
@@ -157,6 +165,7 @@ public class uploaddata extends Activity {
                                 propertyInfos = new PropertyInfo[23];
                                 propertyInfo = new PropertyInfo();
                                 propertyInfo.setName("ProjectName");
+                                projectname = map2.get("ProjectName");
                                 propertyInfo.setValue(map2.get("ProjectName"));
                                 pname=map2.get("ProjectName");
                                 propertyInfos[0] = propertyInfo;
@@ -171,10 +180,12 @@ public class uploaddata extends Activity {
                                 propertyInfo = new PropertyInfo();
                                 propertyInfo.setName("LiftType");
                                 propertyInfo.setValue(map2.get("LiftType"));
+                                lifttype = map2.get("LiftType");
                                 propertyInfos[3] = propertyInfo;
                                 propertyInfo = new PropertyInfo();
                                 propertyInfo.setName("CheckDate");
                                 propertyInfo.setValue(map2.get("CheckDate"));
+                                checkdate = map2.get("CheckDate");
                                 propertyInfos[4] = propertyInfo;
                                 propertyInfo = new PropertyInfo();
                                 propertyInfo.setName("EffectiveDate");
@@ -191,10 +202,12 @@ public class uploaddata extends Activity {
                                 propertyInfo = new PropertyInfo();
                                 propertyInfo.setName("LeaveTime");
                                 propertyInfo.setValue(map2.get("LeaveTime"));
+                                leavetime = map2.get("LeaveTime");
                                 propertyInfos[8] = propertyInfo;
                                 propertyInfo = new PropertyInfo();
                                 propertyInfo.setName("CheckPerson");
                                 propertyInfo.setValue(map2.get("CheckPerson"));
+                                CheckPerson = map2.get("CheckPerson");
                                 propertyInfos[9] = propertyInfo;
                                 propertyInfo = new PropertyInfo();
                                 propertyInfo.setName("LiftNO");
@@ -240,6 +253,7 @@ public class uploaddata extends Activity {
                                 propertyInfo = new PropertyInfo();
                                 propertyInfo.setName("TableType");
                                 propertyInfo.setValue(map2.get("TableType"));
+                                tabletype = map2.get("TableType");
                                 propertyInfos[20] = propertyInfo;
                                 propertyInfo = new PropertyInfo();
                                 propertyInfo.setName("pxid");
@@ -330,6 +344,47 @@ public class uploaddata extends Activity {
 
 
                             Common.mainDB.DelTaskinfo(ContractNO,LiftNO);
+
+
+                            propertyInfos = new PropertyInfo[7];
+                            propertyInfo = new PropertyInfo();
+                            propertyInfo.setName("ProjectName");
+                            propertyInfo.setValue(projectname);
+                            propertyInfos[0] = propertyInfo;
+                            propertyInfo = new PropertyInfo();
+                            propertyInfo.setName("LiftType");
+                            propertyInfo.setValue(lifttype);
+                            propertyInfos[1] = propertyInfo;
+                            propertyInfo = new PropertyInfo();
+                            propertyInfo.setName("CheckDate");
+                            propertyInfo.setValue(checkdate);
+                            propertyInfos[2] = propertyInfo;
+                            propertyInfo = new PropertyInfo();
+                            propertyInfo.setName("LeaveTime");
+                            propertyInfo.setValue(leavetime);
+                            propertyInfos[3] = propertyInfo;
+                            propertyInfo = new PropertyInfo();
+                            propertyInfo.setName("CheckPerson");
+                            propertyInfo.setValue(CheckPerson);
+                            propertyInfos[4] = propertyInfo;
+                            propertyInfo = new PropertyInfo();
+                            propertyInfo.setName("pxid");
+                            propertyInfo.setValue(pxid);
+                            propertyInfos[5] = propertyInfo;
+                            propertyInfo = new PropertyInfo();
+                            propertyInfo.setName("TableType");
+                            propertyInfo.setValue(tabletype);
+                            propertyInfos[6] = propertyInfo;
+
+
+                            webservice = new Webservice(Common.ServerWCF,10000);
+                            r = webservice.PDA_GetInterFaceForStringNew(propertyInfos,"A_PushSubmit");
+                            if (r.equals("-1"))
+                            {
+                                handler.sendEmptyMessage(0);
+                                return;
+                            }
+
 
                             Message message=handler.obtainMessage();
                             message.what=3;
