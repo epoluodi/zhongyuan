@@ -26,6 +26,9 @@ android {
             debuggable false
             signingConfig signingConfigs.config
         }
+        debug {
+            signingConfig signingConfigs.config
+        }
     }
     productFlavors {
     }
@@ -33,8 +36,8 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile files('libs/ScannerInterface.jar')
     compile files('libs/ksoap2-android-assembly-2.6.5-jar-with-dependencies.jar')
     compile files('libs/zxing-1.6-core.jar')
-    compile files('libs/ScannerInterface.jar')
     compile files('libs/BaiduLBS_Android.jar')
 }
