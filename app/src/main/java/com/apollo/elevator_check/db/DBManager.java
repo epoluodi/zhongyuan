@@ -405,7 +405,7 @@ public class DBManager {
                 if (projecttype.equals("△+■+○（半年保养项目）"))
                 {
                     if (!mark.contains("△") && !mark.contains("■")
-                            && mark.contains("○"))
+                            && !mark.contains("○"))
                         return "";
                 }
 //                if (projecttype.equals("△+■+○+★（全年保养项目）"))
