@@ -601,6 +601,13 @@ public class DBManager {
 
 
 
+    public Cursor getScanCodeInfo(String pxid,String liftno)
+    {
+        Cursor cursor = db.rawQuery("select * from ProjectInfo_TABLE where LiftNO= ? and pxid = ? ",
+                new String[]{liftno,pxid});
+
+        return cursor;
+    }
 
 
 

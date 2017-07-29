@@ -48,6 +48,8 @@ public class taskfinish extends Activity {
     String code="";
     String khmc;
 
+    private Button btnchecktask;
+
     private boolean isScaning = false;
 
     private SoundPool soundpool = null;
@@ -167,6 +169,8 @@ public class taskfinish extends Activity {
         bconfim =(Button)findViewById(R.id.buttonok);
         bconfim.setOnClickListener(onClickListener);
         btnsign = (Button)findViewById(R.id.btnsign);
+        btnchecktask = (Button)findViewById(R.id.checkTask);
+        btnchecktask.setOnClickListener(onClickListenerchecktask);
         btnsign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -312,6 +316,16 @@ public class taskfinish extends Activity {
         });
     }
 
+    View.OnClickListener onClickListenerchecktask = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent=new Intent(taskfinish.this,CheckTaskActivity.class);
+            intent.putExtra("pxid",pxid);
+            intent.putExtra("liftno",LiftNO);
+
+            startActivity(intent);
+        }
+    };
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override

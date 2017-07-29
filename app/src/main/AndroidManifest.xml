@@ -14,20 +14,15 @@
     <uses-permission android:name="android.permission.install_packages" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
-    <uses-permission android:name="android.permission.MOUNT_FORMAT_FILESYSTEMS"/>
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.MOUNT_FORMAT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.NFC" />
-
-
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.GET_TASKS" />
-
-
-
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -40,8 +35,11 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="T9ZBc7N6v8jrwiSRyaaGATMx8kBGdvfC" />
-        <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote"/>
 
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" />
 
         <activity
             android:name=".Login"
@@ -51,48 +49,40 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".setting"
-            android:label="@string/title_activity_setting"></activity>
+            android:label="@string/title_activity_setting" />
         <activity
             android:name=".main"
-            android:label="@string/title_activity_main">
-
-
-        </activity>
+            android:label="@string/title_activity_main"></activity>
         <activity
             android:name=".createtask"
             android:label="@string/title_activity_createtask"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"></activity>
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".ScanTask"
-            android:label="@string/title_activity_scan_task"></activity>
+            android:label="@string/title_activity_scan_task" />
         <activity
             android:name=".taskfinish"
-            android:label="@string/title_activity_taskfinish"></activity>
+            android:label="@string/title_activity_taskfinish" />
         <activity
             android:name=".yingji"
-            android:label="@string/title_activity_yingji"></activity>
+            android:label="@string/title_activity_yingji" />
         <activity
             android:name=".uploaddata"
-            android:label="@string/title_activity_uploaddata"></activity>
+            android:label="@string/title_activity_uploaddata" />
         <activity
             android:name=".CaptureActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            android:windowSoftInputMode="stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".SignaturepadViewPlugin"
             android:screenOrientation="landscape" />
-        <activity android:name=".RemarkActivity">
-
-
-
-
-        </activity>
+        <activity android:name=".RemarkActivity"></activity>
+        <activity android:name=".CheckTaskActivity"></activity>
     </application>
 
 </manifest>

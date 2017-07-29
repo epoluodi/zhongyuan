@@ -117,8 +117,10 @@ public class ScanTask extends Activity {
             }
 
 
+
             scancode.setText(barcodeStr);
             onKeyListenerliftno.onKey(scancode,0,new KeyEvent(KeyEvent.ACTION_UP,66));
+            checkOK.setChecked(true);
             scancode.requestFocus();
 
         }
@@ -180,6 +182,7 @@ public class ScanTask extends Activity {
 
             scancode.setText(barcodeStr);
             onKeyListenerliftno.onKey(scancode,0,new KeyEvent(KeyEvent.ACTION_UP,66));
+            checkOK.setChecked(true);
             scancode.requestFocus();
 
         }
@@ -404,6 +407,7 @@ public class ScanTask extends Activity {
         scandata.ScanInfo = iteminfo;
         scandata.ScanTime = Common.GetSysOnlyTime();
         scandata.state=0;
+        checkOK.setChecked(true);
         Common.mainDB.Addprojectinfo(scandata);
 
     }
@@ -475,7 +479,7 @@ public class ScanTask extends Activity {
                 scandata.ScanCode = strscancode;
                 scandata.ScanInfo = iteminfo;
                 scandata.ScanTime = Common.GetSysOnlyTime();
-
+                scandata.state = 0;
 
                 Common.mainDB.Addprojectinfo(scandata);
                 scancode.selectAll();
