@@ -115,38 +115,53 @@
             android:listSelector="@color/palegreen"
             />
 
-<RelativeLayout
+<LinearLayout
+
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:orientation="horizontal"
     android:layout_gravity="center_horizontal"
     android:gravity="center_horizontal">
-
     <Button
-        android:layout_width="100dp"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="保养明细"
+        android:textSize="16dp"
+
+        android:id="@+id/checkTask"
+        android:textColor="@color/black"
+
+        />
+    <Button
+        android:layout_weight="1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="执行任务"
         android:id="@+id/buttondo"
-        android:textSize="18dp"
+        android:textSize="16dp"
         />
     <Button
-        android:layout_width="100dp"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/buttonclear"
-        android:layout_toRightOf="@+id/buttondo"
-        android:layout_marginLeft="5dp"
+
+
         android:text="数据清除"
-        android:textSize="18dp"
+        android:textSize="16dp"
         />
     <Button
-        android:layout_width="100dp"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/buttonconfim"
-        android:layout_marginLeft="5dp"
-        android:layout_toRightOf="@+id/buttonclear"
+
         android:text="任务确认"
-        android:textSize="18dp"
+        android:textSize="16dp"
         />
-    </RelativeLayout>
+    </LinearLayout>
 
         </LinearLayout>
 

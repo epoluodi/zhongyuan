@@ -120,18 +120,7 @@
         android:layout_below="@+id/customercode"
         android:layout_alignLeft="@+id/buttonok"
         />
-    <Button
-        android:layout_width="300dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="10dp"
-        android:text="查看保养明细"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@+id/buttonok"
-        android:background="@drawable/buttonclickstyle"
-        android:id="@+id/checkTask"
-        android:textColor="@color/black"
 
-        />
 
 
     <Button

@@ -106,7 +106,7 @@ public class createtask extends Activity {
     private int soundid;
     private String barcodeStr;
     private final static String SCAN_ACTION = "urovo.rcv.message";//扫描结束action
-
+    private Button btnchecktask;
     private boolean isEScan = false;
     private LatLng latLng1 = null, latLng2 = null;
 
@@ -329,13 +329,25 @@ public class createtask extends Activity {
         }
     };
 
+    View.OnClickListener onClickListenerchecktask = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent=new Intent(createtask.this,CheckTaskActivity.class);
+            intent.putExtra("pxid",selectmap.get("pxid"));
+            intent.putExtra("liftno",selectmap.get("LiftNO"));
+
+            startActivity(intent);
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_createtask);
 
         gps_server = new GPS_Server(getApplicationContext(), gpsCallBack);
-
+        btnchecktask = (Button)findViewById(R.id.checkTask);
+        btnchecktask.setOnClickListener(onClickListenerchecktask);
         listView = (ListView) findViewById(R.id.list1);
         listView.setOnItemClickListener(onItemClickListener);
         spinner = (Spinner) findViewById(R.id.dttype);

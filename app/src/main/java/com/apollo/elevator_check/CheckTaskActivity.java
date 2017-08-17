@@ -67,6 +67,7 @@ public class CheckTaskActivity extends Activity {
             map.put("ScanInfo",cursor.getString(19));
             map.put("state",String.valueOf(cursor.getInt(22)));
             map.put("scantime",cursor.getString(20));
+            map.put("scancode",cursor.getString(18));
             mapList.add(map);
         }
         cursor.close();
@@ -102,7 +103,9 @@ public class CheckTaskActivity extends Activity {
             scaninfo = (TextView)convertView.findViewById(R.id.scaninfo);
             scantime = (TextView)convertView.findViewById(R.id.scantime);
             scanstate = (TextView)convertView.findViewById(R.id.state);
-            scaninfo.setText(map.get("ScanInfo"));
+            scaninfo.setText(map.get("scancode").substring(3,
+                    map.get("scancode").length())
+                    +  map.get("ScanInfo"));
             scantime.setText("扫描时间:" + map.get("scantime"));
             if (map.get("state").equals("0"))
             {
