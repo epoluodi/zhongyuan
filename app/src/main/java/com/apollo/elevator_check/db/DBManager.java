@@ -509,11 +509,11 @@ public class DBManager {
 
 
 
-    public Boolean checkimgcount(String ContractNO,String liftno)
+    public Boolean checkimgcount(String ContractNO,String LiftCode)
     {
         try {
-            Cursor cursor = db.rawQuery("select * from photoinfo where ContractNO = ? and LiftNO= ? ",
-                    new String[]{ContractNO,liftno});
+            Cursor cursor = db.rawQuery("select * from photoinfo where ContractNO = ? and LiftCode= ? ",
+                    new String[]{ContractNO,LiftCode});
 
             Boolean r;
             if (cursor.getCount() <3)

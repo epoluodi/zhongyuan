@@ -103,7 +103,7 @@ public class CheckTaskActivity extends Activity {
             scaninfo = (TextView)convertView.findViewById(R.id.scaninfo);
             scantime = (TextView)convertView.findViewById(R.id.scantime);
             scanstate = (TextView)convertView.findViewById(R.id.state);
-            scaninfo.setText(map.get("scancode").substring(3,
+            scaninfo.setText(map.get("scancode").substring(2,
                     map.get("scancode").length())
                     +  map.get("ScanInfo"));
             scantime.setText("扫描时间:" + map.get("scantime"));

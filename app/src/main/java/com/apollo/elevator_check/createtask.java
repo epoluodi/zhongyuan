@@ -731,7 +731,7 @@ public class createtask extends Activity {
             }
 
             if (!Common.mainDB.checkimgcount(selectmap.get("ContractNO"),
-                    selectmap.get("LiftNO")) && !mapList1.get(0).get("TableType").equals("5")) {
+                    selectmap.get("LiftCode")) && !mapList1.get(0).get("TableType").equals("5")) {
                 Toast.makeText(createtask.this, "巡检照片必须达到3张以上", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -748,19 +748,19 @@ public class createtask extends Activity {
         if (tabletype.equals("1")) {
 
             if (projecttype.equals("△（半月保养项目）")) {
-                if (count < 27)
+                if (count < 31)
                     return false;
             }
             if (projecttype.equals("△+■（季度保养项目）")) {
-                if (count < 39)
+                if (count < 44)
                     return false;
             }
             if (projecttype.equals("△+■+○（半年保养项目）")) {
-                if (count < 51)
+                if (count < 59)
                     return false;
             }
             if (projecttype.equals("△+■+○+★（全年保养项目）")) {
-                if (count < 66)
+                if (count < 76)
                     return false;
             }
             return true;
